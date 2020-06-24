@@ -26,17 +26,17 @@ public class Btp extends Command {
     public void execute(CommandSender sender, String[] args) {
 
         if (!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "Command only for player !"));
+            sender.sendMessage(new TextComponent(ChatColor.RED + "Seul un joueur peut effectuer cette commande !"));
 
             return;
         }
         if (!sender.hasPermission("bungeeteleport.tp")) {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "You don't have permission to execute this command !"));
+            sender.sendMessage(new TextComponent(ChatColor.RED + "Vous n'avez pas la permission de faire ceci !"));
 
             return;
         }
         if (args.length < 1) {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "Error: /btp <player> [<player>]"));
+            sender.sendMessage(new TextComponent(ChatColor.RED + "Erreur: /btp <player> [<player>]"));
 
             return;
         }
@@ -47,12 +47,12 @@ public class Btp extends Command {
 
 
             if (args[0] != null && to == null) {
-                from.sendMessage(new TextComponent(ChatColor.RED + "This player is not online !"));
+                from.sendMessage(new TextComponent(ChatColor.RED + "Le joueur n'est pas en-ligne !"));
 
                 return;
             }
             teleport(from, to);
-            from.sendMessage(new TextComponent(ChatColor.GREEN + "You have been teleported to " + ChatColor.DARK_GREEN + "" + ChatColor.BOLD + to.getName()));
+            from.sendMessage(new TextComponent(ChatColor.GREEN + "Vous avez été téleporté vers " + ChatColor.DARK_GREEN + "" + ChatColor.BOLD + to.getName()));
 
             return;
         }
@@ -60,7 +60,7 @@ public class Btp extends Command {
         if (args.length == 2) {
 
             if (!sender.hasPermission("bungeeteleport.tp.others")) {
-                sender.sendMessage(new TextComponent(ChatColor.RED + "You don't have permission to execute this command !"));
+                sender.sendMessage(new TextComponent(ChatColor.RED + "Vous n'avez pas la permission de faire ceci !"));
 
                 return;
             }
@@ -70,18 +70,18 @@ public class Btp extends Command {
 
 
             if (from == null) {
-                sender.sendMessage(new TextComponent(ChatColor.RED + args[0] + " is not online !"));
+                sender.sendMessage(new TextComponent(ChatColor.RED + args[0] + " n'est pas en-ligne !"));
 
                 return;
             }
             if (to == null) {
-                sender.sendMessage(new TextComponent(ChatColor.RED + args[1] + " is not online !"));
+                sender.sendMessage(new TextComponent(ChatColor.RED + args[1] + " n'est pas en-ligne !"));
 
                 return;
             }
             teleport(from, to);
 
-            sender.sendMessage(new TextComponent(ChatColor.DARK_GREEN + "" + ChatColor.BOLD + from.getName() + ChatColor.RESET + "" + ChatColor.GREEN + " has been teleported to " + ChatColor.DARK_GREEN + "" + ChatColor.BOLD + to.getName() + "."));
+            sender.sendMessage(new TextComponent(ChatColor.DARK_GREEN + "" + ChatColor.BOLD + from.getName() + ChatColor.RESET + "" + ChatColor.GREEN + " a été téleporté vers " + ChatColor.DARK_GREEN + "" + ChatColor.BOLD + to.getName() + "."));
         }
 
     }
