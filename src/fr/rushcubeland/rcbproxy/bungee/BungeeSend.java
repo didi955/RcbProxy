@@ -7,7 +7,6 @@ import java.io.DataOutputStream;
 
 public class BungeeSend {
 
-
     public static void teleport(ProxiedPlayer from, ProxiedPlayer to) {
         ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(byteArrayOut);

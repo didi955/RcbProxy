@@ -6,13 +6,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class RcbProxy extends JavaPlugin {
 
     private static RcbProxy instance;
-    private static String channel = "rcbproxy:main";
+    private String channel = "rcbproxy:main";
+    private String channelRank = "rcbproxy:rank";
 
     @Override
     public void onEnable() {
         instance = this;
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, channel);
+        Bukkit.getMessenger().registerOutgoingPluginChannel(this, channelRank);
         Bukkit.getMessenger().registerIncomingPluginChannel(this, channel, new BukkitReceive());
 
         Bukkit.getServer().getPluginManager().registerEvents(new BukkitReceive(), this);

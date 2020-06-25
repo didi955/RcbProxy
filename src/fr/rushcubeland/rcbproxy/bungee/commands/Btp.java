@@ -2,6 +2,7 @@ package fr.rushcubeland.rcbproxy.bungee.commands;
 
 import fr.rushcubeland.rcbproxy.bungee.BungeeSend;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
+import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -12,6 +13,7 @@ import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class Btp extends Command {
@@ -30,9 +32,10 @@ public class Btp extends Command {
 
             return;
         }
+        ProxiedPlayer player = (ProxiedPlayer) sender;
+        Optional<Account> account = RcbProxy.getInstance().getAccount(player);
         if (!sender.hasPermission("bungeeteleport.tp")) {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Vous n'avez pas la permission de faire ceci !"));
-
             return;
         }
         if (args.length < 1) {
@@ -61,7 +64,6 @@ public class Btp extends Command {
 
             if (!sender.hasPermission("bungeeteleport.tp.others")) {
                 sender.sendMessage(new TextComponent(ChatColor.RED + "Vous n'avez pas la permission de faire ceci !"));
-
                 return;
             }
             ProxiedPlayer from = ProxyServer.getInstance().getPlayer(args[0]);
