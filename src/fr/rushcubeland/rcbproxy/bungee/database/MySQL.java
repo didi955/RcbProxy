@@ -55,7 +55,5 @@ public class MySQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
-
 }
