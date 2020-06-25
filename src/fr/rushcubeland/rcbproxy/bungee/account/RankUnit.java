@@ -92,9 +92,7 @@ public enum RankUnit {
     }
 
     private ArrayList<String> getDataofRankPermissionsFromMySQL(){
-
         ArrayList<String> dataRankperms = new ArrayList<>();
-
         try {
             MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT permission FROM Proxyrank_permissions WHERE grade='%s'",
                     getName()), rs -> {
@@ -113,9 +111,7 @@ public enum RankUnit {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
         return dataRankperms;
-
     }
 
     private void sendDataofRankPermissionsToMySQL(){
@@ -155,5 +151,4 @@ public enum RankUnit {
     public void onEnableProxy(){
         getTaskAsync();
     }
-
 }

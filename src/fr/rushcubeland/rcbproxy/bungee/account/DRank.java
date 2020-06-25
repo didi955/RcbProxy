@@ -24,7 +24,6 @@ public class DRank extends AbstractData {
         for(String perm : rank.getPermissions()){
             ProxyServer.getInstance().getPlayer(uuid).setPermission(perm, true);
         }
-
     }
     public void setRank(RankUnit rank, long seconds){
         if(seconds <= 0){

@@ -33,7 +33,6 @@ public class RcbProxy extends Plugin {
 
         accounts = new ArrayList<>();
 
-
         initCommands();
 
         DatabaseManager.initAllDatabaseConnections();

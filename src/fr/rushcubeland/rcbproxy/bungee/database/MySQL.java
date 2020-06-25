@@ -58,25 +58,4 @@ public class MySQL {
 
     }
 
-    @Deprecated
-    public static void removeDuplicateRows(){
-        try {
-            update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "DELETE t1 FROM Proxyplayer_permissions t1\n" +
-                "    INNER JOIN Proxyplayer_permissions t2\n" +
-                "    WHERE\n" +
-                "    t1.id < t2.id AND\n" +
-                "    t1.uuid = t2.uuid AND\n" +
-                "    t1.permission = t2.permission;");
-
-            update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "DELETE t1 FROM Proxyrank_permissions t1\n" +
-                    "    INNER JOIN Proxyplayer_permissions t2\n" +
-                    "    WHERE\n" +
-                    "    t1.id < t2.id AND\n" +
-                    "    t1.uuid = t2.uuid AND\n" +
-                    "    t1.permission = t2.permission;");
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-    }
-
 }
