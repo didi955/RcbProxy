@@ -117,11 +117,9 @@ public class Account extends AbstractData {
         }
     }
 
-    private void sendTaskAsync(){
-        ProxyServer.getInstance().getScheduler().runAsync(RcbProxy.getInstance(), () -> {
-            sendDataOfProxiedPlayerToMysql();
-            sendDataOfProxiedPlayerPermissionsToMySQL();
-        });
+    private void sendTaskNoAsync(){
+        sendDataOfProxiedPlayerToMysql();
+        sendDataOfProxiedPlayerPermissionsToMySQL();
     }
 
 
@@ -131,7 +129,7 @@ public class Account extends AbstractData {
     }
 
     public void onLogout() {
-        sendTaskAsync();
+        sendTaskNoAsync();
         RcbProxy.getInstance().getAccounts().remove(this);
     }
 

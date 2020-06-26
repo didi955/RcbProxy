@@ -36,7 +36,7 @@ public class BukkitReceive implements PluginMessageListener, Listener {
 
         if (action == null)
             return;
-        if (action.equalsIgnoreCase("teleport")) {
+        if (action.equalsIgnoreCase("Teleport")) {
             Player from = Bukkit.getServer().getPlayer((String)received.get(0));
             Player to = Bukkit.getServer().getPlayer((String)received.get(1));
             from.teleport(to);
