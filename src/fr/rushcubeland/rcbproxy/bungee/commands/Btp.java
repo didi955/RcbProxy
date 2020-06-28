@@ -62,10 +62,6 @@ public class Btp extends Command {
 
         if (args.length == 2) {
 
-            if (!sender.hasPermission("bungeeteleport.tp.others")) {
-                sender.sendMessage(new TextComponent(ChatColor.RED + "Vous n'avez pas la permission de faire ceci !"));
-                return;
-            }
             ProxiedPlayer from = ProxyServer.getInstance().getPlayer(args[0]);
 
             ProxiedPlayer to = ProxyServer.getInstance().getPlayer(args[1]);

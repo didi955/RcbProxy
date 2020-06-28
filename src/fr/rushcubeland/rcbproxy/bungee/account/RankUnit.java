@@ -129,10 +129,8 @@ public enum RankUnit {
         }
     }
 
-    private void sendTaskAsync(){
-        ProxyServer.getInstance().getScheduler().runAsync(RcbProxy.getInstance(), () -> {
-            sendDataofRankPermissionsToMySQL();
-        });
+    private void sendTaskNoAsync(){
+        sendDataofRankPermissionsToMySQL();
     }
 
     private void getTaskAsync(){
@@ -145,7 +143,7 @@ public enum RankUnit {
     }
 
     public void onDisableProxy(){
-        sendTaskAsync();
+        sendTaskNoAsync();
     }
 
     public void onEnableProxy(){

@@ -70,7 +70,7 @@ public class Account extends AbstractData {
     }
 
     private void sendDataOfProxiedPlayerToMysql() {
-        if(newPlayer == true) {
+        if(newPlayer) {
             try {
                 MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Proxyaccounts (uuid, grade, grade_end) VALUES ('%s', '%s', '%s')",
                         getUUID(), dataRank.getRank().getName(), dataRank.getEnd()));
