@@ -27,7 +27,12 @@ public class UnbanCommand extends Command {
         }
         String targetName = args[0];
 
-        UUID targetUUID = UUID.fromString(UUIDFetcher.getUUIFromName(targetName));
+        String uuids = UUIDFetcher.getUUIDFromName(targetName);
+        if(uuids == null){
+            sender.sendMessage(new TextComponent("§cCe joueur n'existe pas !"));
+            return;
+        }
+        UUID targetUUID = UUID.fromString(uuids);
 
         if (!(RcbProxy.getInstance().getBanManager().isBanned(targetUUID))) {
             sender.sendMessage(new TextComponent("§cCe joueur n'est pas banni !"));

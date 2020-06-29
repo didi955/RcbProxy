@@ -3,6 +3,7 @@ package fr.rushcubeland.rcbproxy.bungee.ban;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
+import fr.rushcubeland.rcbproxy.bungee.utils.UUIDFetcher;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -36,6 +37,11 @@ public class BanManager {
             target.disconnect(new TextComponent("§6Vous avez été §cbanni !\n \n §eRaison : §f" + reason + "\n \n §aTemps restant : §f" +
                     getTimeLeft(uuid)));
         }
+        else
+        {
+            ProxyServer.getInstance().broadcast(new TextComponent("§6Le joueur §e" + UUIDFetcher.getNameFromUUID(uuid) + " §6a été §cbanni §6pour §e" + reason));
+        }
+
         if(this.dataunban.contains(uuid.toString())){
             this.dataunban.remove(uuid.toString());
         }

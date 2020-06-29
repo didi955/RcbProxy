@@ -15,9 +15,7 @@ public class ProxiedPlayerQuit implements Listener {
     public void onQuit(PlayerDisconnectEvent e){
         ProxiedPlayer player = e.getPlayer();
         Optional<Account> account = RcbProxy.getInstance().getAccount(player);
-        if(account.isPresent()){
-            account.get().onLogout();
-        }
+        account.ifPresent(Account::onLogout);
 
     }
 }
