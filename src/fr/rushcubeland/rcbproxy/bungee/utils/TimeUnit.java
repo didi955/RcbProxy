@@ -1,6 +1,4 @@
-package fr.rushcubeland.rcbproxy.bungee.ban;
-
-import net.md_5.bungee.api.ProxyServer;
+package fr.rushcubeland.rcbproxy.bungee.utils;
 
 import java.util.HashMap;
 
@@ -10,7 +8,8 @@ public enum TimeUnit {
     MINUTE("Minute(s)", "min", 60L),
     HEURE("Heure(s)", "h", 3600L),
     JOUR("Jour(s)", "j", 86400L),
-    MOIS("Mois", "m", 2592000L);
+    MOIS("Mois", "m", 2592000L),
+    ANNEES("Année(s)", "a", 31536000L);
 
     private String name;
     private String shortcut;

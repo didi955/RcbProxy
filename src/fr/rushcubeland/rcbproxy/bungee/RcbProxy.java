@@ -3,7 +3,7 @@ package fr.rushcubeland.rcbproxy.bungee;
 import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import fr.rushcubeland.rcbproxy.bungee.account.RankUnit;
 import fr.rushcubeland.rcbproxy.bungee.ban.BanManager;
-import fr.rushcubeland.rcbproxy.bungee.ban.TimeUnit;
+import fr.rushcubeland.rcbproxy.bungee.utils.TimeUnit;
 import fr.rushcubeland.rcbproxy.bungee.commands.BanCommand;
 import fr.rushcubeland.rcbproxy.bungee.commands.Btp;
 import fr.rushcubeland.rcbproxy.bungee.commands.UnbanCommand;

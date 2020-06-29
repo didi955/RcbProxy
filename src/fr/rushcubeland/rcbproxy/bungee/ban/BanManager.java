@@ -1,8 +1,8 @@
 package fr.rushcubeland.rcbproxy.bungee.ban;
 
-import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
+import fr.rushcubeland.rcbproxy.bungee.utils.TimeUnit;
 import fr.rushcubeland.rcbproxy.bungee.utils.UUIDFetcher;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -94,11 +94,17 @@ public class BanManager {
             return "§cPermanent";
         }
         long tempsRestant = (getEnd(uuid) - System.currentTimeMillis()) / 1000L;
+        int annees = 0;
         int mois = 0;
         int jours = 0;
         int heures = 0;
         int minutes = 0;
+        int seconds = 0;
 
+        while (tempsRestant >= TimeUnit.ANNEES.getToSecond()){
+            annees++;
+            tempsRestant -= TimeUnit.ANNEES.getToSecond();
+        }
         while (tempsRestant >= TimeUnit.MOIS.getToSecond()) {
             mois++;
             tempsRestant -= TimeUnit.MOIS.getToSecond();
@@ -115,7 +121,28 @@ public class BanManager {
             minutes++;
             tempsRestant -= TimeUnit.MINUTE.getToSecond();
         }
-        return mois + " " + TimeUnit.MOIS.getName() + ", " + jours + " " + TimeUnit.JOUR.getName() + ", " + heures + " " + TimeUnit.HEURE.getName() + ", " + minutes + " " + TimeUnit.MINUTE.getName();
+        while (tempsRestant >= TimeUnit.SECONDE.getToSecond()) {
+            seconds++;
+            tempsRestant -= TimeUnit.SECONDE.getToSecond();
+        }
+        if(annees != 0){
+            return annees + " " + TimeUnit.ANNEES.getName() + ", " + mois + " " + TimeUnit.MOIS.getName() + ", " + jours + " " + TimeUnit.JOUR.getName() + ", " + heures + " " + TimeUnit.HEURE.getName() + ", " + minutes + " " + TimeUnit.MINUTE.getName();
+        }
+        else if(mois != 0){
+            return mois + " " + TimeUnit.MOIS.getName() + ", " + jours + " " + TimeUnit.JOUR.getName() + ", " + heures + " " + TimeUnit.HEURE.getName() + ", " + minutes + " " + TimeUnit.MINUTE.getName();
+        }
+        else if(jours != 0){
+            return jours + " " + TimeUnit.JOUR.getName() + ", " + heures + " " + TimeUnit.HEURE.getName() + ", " + minutes + " " + TimeUnit.MINUTE.getName();
+        }
+        else if(heures != 0){
+            return heures + " " + TimeUnit.HEURE.getName() + ", " + minutes + " " + TimeUnit.MINUTE.getName();
+        }
+        else if(minutes != 0){
+            return minutes + " " + TimeUnit.MINUTE.getName();
+        }
+        else {
+            return seconds + " " + TimeUnit.SECONDE.getName();
+        }
     }
 
     private void getUUIDOfBanFromMySQL(){
