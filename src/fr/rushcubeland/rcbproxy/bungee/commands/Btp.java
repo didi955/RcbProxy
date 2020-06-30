@@ -29,12 +29,11 @@ public class Btp extends Command {
 
         if (!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Seul un joueur peut effectuer cette commande !"));
-
             return;
         }
         ProxiedPlayer player = (ProxiedPlayer) sender;
         Optional<Account> account = RcbProxy.getInstance().getAccount(player);
-        if (!sender.hasPermission("bungeeteleport.tp")) {
+        if (!sender.hasPermission("rcbproxy.tp")) {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Vous n'avez pas la permission de faire ceci !"));
             return;
         }

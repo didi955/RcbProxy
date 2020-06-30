@@ -1,25 +1,25 @@
 package fr.rushcubeland.rcbproxy.bungee.commands;
 
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.plugin.Command;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.utils.TimeUnit;
 import fr.rushcubeland.rcbproxy.bungee.utils.UUIDFetcher;
-import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
 
 import java.util.UUID;
 
-public class BanCommand extends Command {
+public class MuteCommand extends Command {
 
-    public BanCommand() {
-        super("ban");
+    public MuteCommand() {
+        super("mute");
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if(sender instanceof ProxiedPlayer && !sender.hasPermission("rcbproxy.ban")){
+        if(sender instanceof ProxiedPlayer && !sender.hasPermission("rcbproxy.mute")){
             sender.sendMessage(new TextComponent("§cVous n'avez pas la permission de faire ceci !"));
             return;
         }
@@ -46,8 +46,8 @@ public class BanCommand extends Command {
             targetUUID = target.getUniqueId();
         }
 
-        if (RcbProxy.getInstance().getBanManager().isBanned(targetUUID)) {
-            sender.sendMessage(new TextComponent("§cCe joueur est déjà banni !"));
+        if (RcbProxy.getInstance().getMuteManager().isMuted(targetUUID)) {
+            sender.sendMessage(new TextComponent("§cCe joueur est déjà mute !"));
             return;
         }
 
@@ -57,8 +57,8 @@ public class BanCommand extends Command {
         }
 
         if (args[1].equalsIgnoreCase("perm")) {
-            RcbProxy.getInstance().getBanManager().ban(targetUUID, -1L, reason);
-            sender.sendMessage(new TextComponent("§aVous avez banni §6" + targetName + " §c(Permanent) §apour : §e" + reason));
+            RcbProxy.getInstance().getMuteManager().mute(targetUUID, -1L, reason);
+            sender.sendMessage(new TextComponent("§aVous avez mute §6" + targetName + " §c(Permanent) §apour : §e" + reason));
             return;
         }
         if (!args[1].contains(":")) {
@@ -82,15 +82,15 @@ public class BanCommand extends Command {
             return;
         }
         TimeUnit unit = TimeUnit.getFromShortcut(args[1].split(":")[1]);
-        long banTime = unit.getToSecond() * duration;
+        long muteTime = unit.getToSecond() * duration;
 
-        RcbProxy.getInstance().getBanManager().ban(targetUUID, banTime, reason);
-        sender.sendMessage(new TextComponent("§aVous avez banni §6" + targetName + " §b(" + duration + " " + unit.getName() + ") §apour : §e" + reason));
+        RcbProxy.getInstance().getMuteManager().mute(targetUUID, muteTime, reason);
+        sender.sendMessage(new TextComponent("§aVous avez mute §6" + targetName + " §b(" + duration + " " + unit.getName() + ") §apour : §e" + reason));
 
     }
     public void helpMessage(CommandSender sender) {
-        sender.sendMessage(new TextComponent("§c/ban <joueur> perm <raison>"));
-        sender.sendMessage(new TextComponent("§c/ban <joueur> <durée>:<unité> <raison>"));
+        sender.sendMessage(new TextComponent("§c/mute <joueur> perm <raison>"));
+        sender.sendMessage(new TextComponent("§c/mute <joueur> <durée>:<unité> <raison>"));
     }
 
 }

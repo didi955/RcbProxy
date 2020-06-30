@@ -101,7 +101,7 @@ public class Account extends AbstractData {
         }
     }
 
-    private void getTaskNoAsync(){
+    private void getTasks(){
         String[] data = getDataOfProxiedPlayerFromMySQL();
         ArrayList<String> dataPlayerperms = getDataOfProxiedPlayerPermissionsFromMySQL();
 
@@ -117,7 +117,7 @@ public class Account extends AbstractData {
         }
     }
 
-    private void sendTaskNoAsync(){
+    private void sendTasks(){
         sendDataOfProxiedPlayerToMysql();
         sendDataOfProxiedPlayerPermissionsToMySQL();
     }
@@ -125,11 +125,11 @@ public class Account extends AbstractData {
 
     public void onLogin() {
         RcbProxy.getInstance().getAccounts().add(this);
-        getTaskNoAsync();
+        getTasks();
     }
 
     public void onLogout() {
-        sendTaskNoAsync();
+        sendTasks();
         RcbProxy.getInstance().getAccounts().remove(this);
     }
 

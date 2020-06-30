@@ -24,4 +24,21 @@ public class BungeeSend {
         }
     }
 
+    public static void sendGuiPunishment(ProxiedPlayer player, String target){
+        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(byteArrayOut);
+
+        try {
+            out.writeUTF("PunishGUI");
+            out.writeUTF(player.getName());
+            out.writeUTF(target);
+
+            player.getServer().getInfo()
+                    .sendData(RcbProxy.channel, byteArrayOut.toByteArray());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

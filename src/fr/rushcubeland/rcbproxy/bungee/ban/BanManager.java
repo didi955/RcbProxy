@@ -19,7 +19,6 @@ public class BanManager {
     private HashMap<String, String[]> databan = new HashMap<>();
     private final ArrayList<String> dataunban = new ArrayList<>();
     private ArrayList<String> uuidbansbdd = new ArrayList<>();
-    private boolean alreadysaved;
 
 
     public void ban(UUID uuid, long durationSeconds, String reason){

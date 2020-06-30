@@ -1,5 +1,6 @@
 package fr.rushcubeland.rcbproxy.bukkit;
 
+import fr.rushcubeland.rcbproxy.bukkit.sanction.SanctionGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -36,11 +37,24 @@ public class BukkitReceive implements PluginMessageListener, Listener {
 
         if (action == null)
             return;
-        if (action.equalsIgnoreCase("Teleport")) {
+        if(action.equalsIgnoreCase("Teleport")){
             Player from = Bukkit.getServer().getPlayer((String)received.get(0));
             Player to = Bukkit.getServer().getPlayer((String)received.get(1));
+            if(to == null){
+                from.sendMessage("§cLe joueur s'est déconnecté");
+                return;
+            }
             from.teleport(to);
         }
+        if(action.equalsIgnoreCase("PunishGUI")){
+            Player mod = Bukkit.getServer().getPlayer(received.get(0));
+            String targetname = received.get(1);
+            SanctionGUI.openModGui(mod, targetname);
+            SanctionGUI.getModAndTarget().put(mod, targetname);
+
+        }
     }
+
+
 
 }

@@ -1,6 +1,7 @@
 package fr.rushcubeland.rcbproxy.bungee;
 
 import fr.rushcubeland.rcbproxy.bungee.commands.Btp;
+import fr.rushcubeland.rcbproxy.bungee.commands.WhoisCommand;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.TabCompleteEvent;
@@ -14,10 +15,9 @@ public class AutoCompletion implements Listener {
     public void onTab(TabCompleteEvent e) {
         String[] args = e.getCursor().toLowerCase().split(" ");
 
-        if (args.length >= 1)
-        {
-            if (args[0].startsWith("/"))
-            {
+        if (args.length >= 1){
+            if (args[0].startsWith("/")){
+
                 if (Btp.getCmds().contains(args[0].replaceAll("/", "")) && e
                         .getCursor().contains(" ")) {
 
@@ -26,11 +26,9 @@ public class AutoCompletion implements Listener {
                     ProxiedPlayer p = (ProxiedPlayer)e.getSender();
 
                     if (args.length == 1) {
-
                         for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
                             e.getSuggestions().add(all.getName());
                         }
-
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
@@ -38,17 +36,29 @@ public class AutoCompletion implements Listener {
 
                         return;
                     }
-
                     if (args.length == 2) {
-
                         for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
                             e.getSuggestions().add(all.getName());
                         }
-
                         return;
                     }
                     if (args.length == 3 && getSpace(e.getCursor()) == 2) {
                         addSuggestions(e, args);
+                    }
+                }
+
+                if (WhoisCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                        .getCursor().contains(" ")) {
+
+                    e.getSuggestions().clear();
+
+                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+
+                    if (args.length == 1) {
+                        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                            e.getSuggestions().add(all.getName());
+                        }
+                        return;
                     }
                 }
             }

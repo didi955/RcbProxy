@@ -1,10 +1,8 @@
 package fr.rushcubeland.rcbproxy.bungee.account;
 
-import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -94,7 +92,7 @@ public enum RankUnit {
     private ArrayList<String> getDataofRankPermissionsFromMySQL(){
         ArrayList<String> dataRankperms = new ArrayList<>();
         try {
-            MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT permission FROM Proxyrank_permissions WHERE grade='%s'",
+            MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT * FROM Proxyrank_permissions WHERE grade='%s'",
                     getName()), rs -> {
 
                 try {
@@ -117,36 +115,48 @@ public enum RankUnit {
     private void sendDataofRankPermissionsToMySQL(){
         if(!getPermissions().isEmpty()){
             for(String perms : getPermissions()){
+
                 try {
+                    MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT * FROM Proxyrank_permissions WHERE grade='%s' AND permission='%s'",
+                            getName(), perms), rs -> {
+                        try {
+                            if(!rs.next()){
+                                try {
 
-                    MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Proxyrank_permissions (grade, permission) VALUES ('%s', '%s')",
-                            getName(), perms));
+                                    MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Proxyrank_permissions (grade, permission) VALUES ('%s', '%s')",
+                                            getName(), perms));
 
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
+                                } catch (SQLException throwables) {
+                                    throwables.printStackTrace();
+                                }
+                            }
+                        } catch (SQLException exception) {
+                            exception.printStackTrace();
+                        }
+                    });
+                } catch (SQLException exception) {
+                    exception.printStackTrace();
                 }
             }
         }
     }
 
-    private void sendTaskNoAsync(){
+    private void sendTasks(){
         sendDataofRankPermissionsToMySQL();
     }
 
-    private void getTaskAsync(){
-        ProxyServer.getInstance().getScheduler().runAsync(RcbProxy.getInstance(), () -> {
-            ArrayList<String> dataRankperms = getDataofRankPermissionsFromMySQL();
-            for(String perm : dataRankperms){
-                addPermission(perm);
-            }
-        });
+    private void getTasks(){
+        ArrayList<String> dataRankperms = getDataofRankPermissionsFromMySQL();
+        for(String perm : dataRankperms){
+            addPermission(perm);
+        }
     }
 
     public void onDisableProxy(){
-        sendTaskNoAsync();
+        sendTasks();
     }
 
     public void onEnableProxy(){
-        getTaskAsync();
+        getTasks();
     }
 }

@@ -1,5 +1,6 @@
 package fr.rushcubeland.rcbproxy.bukkit;
 
+import fr.rushcubeland.rcbproxy.bukkit.listeners.ClickEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +17,7 @@ public class RcbProxy extends JavaPlugin {
         Bukkit.getMessenger().registerIncomingPluginChannel(this, channel, new BukkitReceive());
 
         Bukkit.getServer().getPluginManager().registerEvents(new BukkitReceive(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ClickEvent(), this);
 
     }
 

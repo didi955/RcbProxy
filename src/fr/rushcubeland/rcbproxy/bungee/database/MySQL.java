@@ -59,6 +59,13 @@ public class MySQL {
                     "start BIGINT , " +
                     "end BIGINT, " +
                     "reason VARCHAR(64))");
+
+            update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "CREATE TABLE IF NOT EXISTS Proxymute (" +
+                    "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                    "uuid VARCHAR(255), " +
+                    "start BIGINT , " +
+                    "end BIGINT, " +
+                    "reason VARCHAR(64))");
         } catch (SQLException e) {
             e.printStackTrace();
         }

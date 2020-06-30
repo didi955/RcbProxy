@@ -9,20 +9,20 @@ import net.md_5.bungee.api.plugin.Command;
 
 import java.util.UUID;
 
-public class UnbanCommand extends Command {
+public class UnmuteCommand extends Command {
 
-    public UnbanCommand() {
-        super("unban");
+    public UnmuteCommand() {
+        super("unmute");
     }
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if(sender instanceof ProxiedPlayer && !sender.hasPermission("rcbproxy.unban")){
+        if(sender instanceof ProxiedPlayer && !sender.hasPermission("rcbproxy.unmute")){
             sender.sendMessage(new TextComponent("§cVous n'avez pas la permission de faire ceci !"));
             return;
         }
         if (args.length != 1) {
-            sender.sendMessage(new TextComponent("§c/unban <joueur>"));
+            sender.sendMessage(new TextComponent("§c/unmute <joueur>"));
             return;
         }
         String targetName = args[0];
@@ -34,11 +34,12 @@ public class UnbanCommand extends Command {
         }
         UUID targetUUID = UUID.fromString(uuids);
 
-        if (!(RcbProxy.getInstance().getBanManager().isBanned(targetUUID))) {
-            sender.sendMessage(new TextComponent("§cCe joueur n'est pas banni !"));
+        if (!(RcbProxy.getInstance().getMuteManager().isMuted(targetUUID))) {
+            sender.sendMessage(new TextComponent("§cCe joueur n'est pas mute !"));
             return;
         }
-        RcbProxy.getInstance().getBanManager().unban(targetUUID);
-        sender.sendMessage(new TextComponent("§aVous avez débanni §6" + targetName));
+        RcbProxy.getInstance().getMuteManager().unmute(targetUUID);
+        sender.sendMessage(new TextComponent("§aVous avez démute §6" + targetName));
     }
 }
+
