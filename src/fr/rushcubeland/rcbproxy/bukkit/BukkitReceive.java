@@ -1,5 +1,7 @@
 package fr.rushcubeland.rcbproxy.bukkit;
 
+import fr.rushcubeland.rcbproxy.bukkit.mod.ModModerator;
+import fr.rushcubeland.rcbproxy.bukkit.sanction.MuteData;
 import fr.rushcubeland.rcbproxy.bukkit.sanction.SanctionGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -52,6 +54,22 @@ public class BukkitReceive implements PluginMessageListener, Listener {
             SanctionGUI.openModGui(mod, targetname);
             SanctionGUI.getModAndTarget().put(mod, targetname);
 
+        }
+        if(action.equalsIgnoreCase("MuteDataAdd")){
+            String targetName = received.get(0);
+            MuteData.addMute(targetName);
+        }
+        if(action.equalsIgnoreCase("ModModeratorAdd")){
+            String modUUID = received.get(0);
+            ModModerator.addMod(modUUID);
+        }
+        if(action.equalsIgnoreCase("MuteDataRemove")){
+            String targetName = received.get(0);
+            MuteData.removeMute(targetName);
+        }
+        if(action.equalsIgnoreCase("ModModeratorRemove")){
+            String modUUID = received.get(0);
+            ModModerator.removeMod(modUUID);
         }
     }
 

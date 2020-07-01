@@ -11,6 +11,8 @@ import java.util.UUID;
 
 public class UnmuteCommand extends Command {
 
+    private static String cmd = "unmute";
+
     public UnmuteCommand() {
         super("unmute");
     }
@@ -40,6 +42,10 @@ public class UnmuteCommand extends Command {
         }
         RcbProxy.getInstance().getMuteManager().unmute(targetUUID);
         sender.sendMessage(new TextComponent("§aVous avez démute §6" + targetName));
+    }
+
+    public static String getCmd() {
+        return cmd;
     }
 }
 

@@ -11,6 +11,8 @@ import java.util.UUID;
 
 public class UnbanCommand extends Command {
 
+    private static String cmd = "unban";
+
     public UnbanCommand() {
         super("unban");
     }
@@ -40,5 +42,9 @@ public class UnbanCommand extends Command {
         }
         RcbProxy.getInstance().getBanManager().unban(targetUUID);
         sender.sendMessage(new TextComponent("§aVous avez débanni §6" + targetName));
+    }
+
+    public static String getCmd() {
+        return cmd;
     }
 }

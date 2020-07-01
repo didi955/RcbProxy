@@ -13,6 +13,8 @@ import java.util.UUID;
 
 public class MuteCommand extends Command {
 
+    private static String cmd = "mute";
+
     public MuteCommand() {
         super("mute");
     }
@@ -93,4 +95,7 @@ public class MuteCommand extends Command {
         sender.sendMessage(new TextComponent("§c/mute <joueur> <durée>:<unité> <raison>"));
     }
 
+    public static String getCmd() {
+        return cmd;
+    }
 }

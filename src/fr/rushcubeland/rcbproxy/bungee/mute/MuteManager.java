@@ -1,9 +1,10 @@
 package fr.rushcubeland.rcbproxy.bungee.mute;
 
+import fr.rushcubeland.rcbproxy.bungee.BungeeSend;
+import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
 import fr.rushcubeland.rcbproxy.bungee.utils.TimeUnit;
-import fr.rushcubeland.rcbproxy.bungee.utils.UUIDFetcher;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -29,6 +30,8 @@ public class MuteManager {
         }
         String[] data = {String.valueOf(start), String.valueOf(end), reason};
         this.datamute.put(uuid.toString(), data);
+
+        BungeeSend.sendMuteDataAdd(uuid.toString());
 
         if(ProxyServer.getInstance().getPlayer(uuid) != null) {
             ProxiedPlayer target = ProxyServer.getInstance().getPlayer(uuid);
@@ -62,6 +65,7 @@ public class MuteManager {
         if(isMuted(uuid)){
             this.datamute.remove(uuid.toString());
             this.dataunmute.add(uuid.toString());
+            BungeeSend.sendMuteDataRemove(uuid.toString());
         }
     }
 
@@ -256,5 +260,4 @@ public class MuteManager {
     public void onDisableProxy(){
         sendTaskNoAsync();
     }
-
 }

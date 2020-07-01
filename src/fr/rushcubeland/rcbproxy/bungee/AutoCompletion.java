@@ -1,7 +1,6 @@
 package fr.rushcubeland.rcbproxy.bungee;
 
-import fr.rushcubeland.rcbproxy.bungee.commands.Btp;
-import fr.rushcubeland.rcbproxy.bungee.commands.WhoisCommand;
+import fr.rushcubeland.rcbproxy.bungee.commands.*;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.TabCompleteEvent;
@@ -46,8 +45,77 @@ public class AutoCompletion implements Listener {
                         addSuggestions(e, args);
                     }
                 }
+                if(WhoisCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                        .getCursor().contains(" ")) {
 
-                if (WhoisCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                    e.getSuggestions().clear();
+
+                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+
+                    if (args.length == 1) {
+                        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                            e.getSuggestions().add(all.getName());
+                        }
+                        return;
+                    }
+                }
+                if(MuteCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                        .getCursor().contains(" ")) {
+
+                    e.getSuggestions().clear();
+
+                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+
+                    if (args.length == 1) {
+                        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                            e.getSuggestions().add(all.getName());
+                        }
+                        return;
+                    }
+                }
+                if(BanCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                        .getCursor().contains(" ")) {
+
+                    e.getSuggestions().clear();
+
+                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+
+                    if (args.length == 1) {
+                        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                            e.getSuggestions().add(all.getName());
+                        }
+                        return;
+                    }
+                }
+                if(UnmuteCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                        .getCursor().contains(" ")) {
+
+                    e.getSuggestions().clear();
+
+                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+
+                    if (args.length == 1) {
+                        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                            e.getSuggestions().add(all.getName());
+                        }
+                        return;
+                    }
+                }
+                if(PunishGUICommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                        .getCursor().contains(" ")) {
+
+                    e.getSuggestions().clear();
+
+                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+
+                    if (args.length == 1) {
+                        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                            e.getSuggestions().add(all.getName());
+                        }
+                        return;
+                    }
+                }
+                if(KickCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
                         .getCursor().contains(" ")) {
 
                     e.getSuggestions().clear();

@@ -92,11 +92,11 @@ public enum RankUnit {
     private ArrayList<String> getDataofRankPermissionsFromMySQL(){
         ArrayList<String> dataRankperms = new ArrayList<>();
         try {
-            MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT * FROM Proxyrank_permissions WHERE grade='%s'",
+            MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT permission FROM Proxyrank_permissions WHERE grade='%s'",
                     getName()), rs -> {
 
                 try {
-                    if(rs.next()){
+                    while(rs.next()){
 
                         dataRankperms.add(rs.getString("permission"));
 
@@ -104,7 +104,6 @@ public enum RankUnit {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-
             });
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -117,7 +116,7 @@ public enum RankUnit {
             for(String perms : getPermissions()){
 
                 try {
-                    MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT * FROM Proxyrank_permissions WHERE grade='%s' AND permission='%s'",
+                    MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT permission FROM Proxyrank_permissions WHERE grade='%s' AND permission='%s'",
                             getName(), perms), rs -> {
                         try {
                             if(!rs.next()){

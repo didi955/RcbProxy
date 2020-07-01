@@ -64,6 +64,9 @@ public class SanctionGUI {
         ItemStack troll = new ItemBuilder(Material.PUMPKIN).setName("§6Troll").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
         inv.setItem(9, troll);
 
+        ItemStack report = new ItemBuilder(Material.DIAMOND_AXE).setName("§6Abus de report").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(10, report);
+
         ItemStack quit = new ItemBuilder(Material.ACACIA_DOOR).setName("§cRetour").toItemStack();
         inv.setItem(53, quit);
 
@@ -82,6 +85,45 @@ public class SanctionGUI {
 
         ItemStack msginu = new ItemBuilder(Material.WOODEN_HOE).setName("§6Messages inutile").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
         inv.setItem(9, msginu);
+
+        ItemStack fakenews = new ItemBuilder(Material.GLASS_BOTTLE).setName("§6Fausse information").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(10, fakenews);
+
+        ItemStack formatIncorrect = new ItemBuilder(Material.PUFFERFISH).setName("§6Formatage incorrect").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(11, formatIncorrect);
+
+        ItemStack ventard = new ItemBuilder(Material.GOLDEN_SWORD).setName("§6Ventardise").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(12, ventard);
+
+        ItemStack flood = new ItemBuilder(Material.TNT).setName("§6Flood/Spam").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(13, flood);
+
+        ItemStack mlangage = new ItemBuilder(Material.ROTTEN_FLESH).setName("§6Mauvais langage").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(14, mlangage);
+
+        ItemStack provoc = new ItemBuilder(Material.ZOMBIE_HEAD).setName("§6Provocation").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(15, provoc);
+
+        ItemStack insulte = new ItemBuilder(Material.CREEPER_HEAD).setName("§6Insulte").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(16, insulte);
+
+        ItemStack incitation = new ItemBuilder(Material.ENDER_PEARL).setName("§6Incitation à l'infraction").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(17, incitation);
+
+        ItemStack link = new ItemBuilder(Material.BARRIER).setName("§6Lien interdit").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(18, link);
+
+        ItemStack pub = new ItemBuilder(Material.BOOK).setName("§6Publicité").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(19, pub);
+
+        ItemStack ddoshack = new ItemBuilder(Material.CARROT_ON_A_STICK).setName("§6DDOS/Hack (lien)").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(20, ddoshack);
+
+        ItemStack pseudoincorrect = new ItemBuilder(Material.NAME_TAG).setName("§6Pseudo incorrect").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(21, pseudoincorrect);
+
+        ItemStack menaceirl = new ItemBuilder(Material.WITHER_SKELETON_SKULL).setName("§6Menaces IRL").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(22, menaceirl);
 
         ItemStack quit = new ItemBuilder(Material.ACACIA_DOOR).setName("§cRetour").toItemStack();
         inv.setItem(53, quit);
@@ -108,14 +150,17 @@ public class SanctionGUI {
         ItemStack fastplace = new ItemBuilder(Material.CLOCK).setName("§6FastPlace").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
         inv.setItem(11, fastplace);
 
+        ItemStack macro = new ItemBuilder(Material.DIAMOND_SHOVEL).setName("§6Macro").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(12, macro);
+
         ItemStack reach = new ItemBuilder(Material.BOW).setName("§6Reach").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
-        inv.setItem(12, reach);
+        inv.setItem(13, reach);
 
         ItemStack fly = new ItemBuilder(Material.FEATHER).setName("§6Fly/Glide").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
-        inv.setItem(13, fly);
+        inv.setItem(14, fly);
 
         ItemStack autre = new ItemBuilder(Material.STONE).setName("§6Autre").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
-        inv.setItem(14, autre);
+        inv.setItem(15, autre);
 
         ItemStack quit = new ItemBuilder(Material.ACACIA_DOOR).setName("§cRetour").toItemStack();
         inv.setItem(53, quit);
@@ -136,8 +181,11 @@ public class SanctionGUI {
         ItemStack ally = new ItemBuilder(Material.TROPICAL_FISH).setName("§6Alliance en jeu interdite").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
         inv.setItem(9, ally);
 
-        ItemStack skinincorect = new ItemBuilder(Material.LEATHER_CHESTPLATE).setName("§6Skin incorrecte").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        ItemStack skinincorect = new ItemBuilder(Material.LEATHER_CHESTPLATE).setName("§6Skin incorrect").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
         inv.setItem(10, skinincorect);
+
+        ItemStack antijeu = new ItemBuilder(Material.FLINT_AND_STEEL).setName("§6Anti-jeu").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        inv.setItem(11, antijeu);
 
         ItemStack quit = new ItemBuilder(Material.ACACIA_DOOR).setName("§cRetour").toItemStack();
         inv.setItem(53, quit);

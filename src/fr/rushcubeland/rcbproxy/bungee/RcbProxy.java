@@ -4,7 +4,7 @@ import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import fr.rushcubeland.rcbproxy.bungee.account.RankUnit;
 import fr.rushcubeland.rcbproxy.bungee.ban.BanManager;
 import fr.rushcubeland.rcbproxy.bungee.commands.*;
-import fr.rushcubeland.rcbproxy.bungee.listeners.Chat;
+import fr.rushcubeland.rcbproxy.bungee.mute.CheckMuteStateTask;
 import fr.rushcubeland.rcbproxy.bungee.mute.MuteManager;
 import fr.rushcubeland.rcbproxy.bungee.utils.TimeUnit;
 import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
@@ -37,7 +37,6 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new AutoCompletion());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxiedPlayerJoin());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxiedPlayerQuit());
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new Chat());
 
         accounts = new ArrayList<>();
 
@@ -52,6 +51,8 @@ public class RcbProxy extends Plugin {
         banManager.onEnableProxy();
         this.muteManager = new MuteManager();
         muteManager.onEnableProxy();
+
+        ProxyServer.getInstance().getScheduler().schedule(this, new CheckMuteStateTask(), 1, 3, java.util.concurrent.TimeUnit.SECONDS);
 
     }
 
@@ -78,6 +79,8 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new MuteCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new UnmuteCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PunishGUICommand());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new KickCommand());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new ModModeratorCommand());
     }
 
     private void initAllRankPermissions(){

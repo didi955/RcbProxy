@@ -13,6 +13,8 @@ import java.util.UUID;
 
 public class BanCommand extends Command {
 
+    private static String cmd = "ban";
+
     public BanCommand() {
         super("ban");
     }
@@ -93,4 +95,7 @@ public class BanCommand extends Command {
         sender.sendMessage(new TextComponent("§c/ban <joueur> <durée>:<unité> <raison>"));
     }
 
+    public static String getCmd() {
+        return cmd;
+    }
 }

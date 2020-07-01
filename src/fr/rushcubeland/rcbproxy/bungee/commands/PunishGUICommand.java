@@ -9,6 +9,8 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class PunishGUICommand extends Command {
 
+    private static String cmd = "ap";
+
     public PunishGUICommand() {
         super("ap");
     }
@@ -36,5 +38,9 @@ public class PunishGUICommand extends Command {
             }
 
         }
+    }
+
+    public static String getCmd() {
+        return cmd;
     }
 }
