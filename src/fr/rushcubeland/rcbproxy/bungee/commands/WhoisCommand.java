@@ -42,7 +42,7 @@ public class WhoisCommand extends Command {
     public void infos(ProxiedPlayer sender, ProxiedPlayer target) {
         Optional<Account> account = RcbProxy.getInstance().getAccount(target);
         if(ModModerator.isInModData(target.getUniqueId().toString())){
-            account.ifPresent(value -> sender.sendMessage(new TextComponent("§6[Whois] " + value.getDatarank().getRank().getPrefix() + target.getName() + "§6(MOD)"+" :")));
+            account.ifPresent(value -> sender.sendMessage(new TextComponent("§6[Whois] " + value.getDatarank().getRank().getPrefix() + target.getName() + " §6(MOD) §f:")));
         }
         else
         {
@@ -52,7 +52,7 @@ public class WhoisCommand extends Command {
         int port = target.getAddress().getPort();
         sender.sendMessage(new TextComponent("§fConnexion: §7" + ip + ":" + port));
         sender.sendMessage(new TextComponent("§fServeur: §c" + target.getServer().getInfo().getName()));
-        sender.sendMessage(new TextComponent("§fPing: §7" + target.getPing()));
+        sender.sendMessage(new TextComponent("§fPing: §7" + target.getPing() + "ms"));
         sender.sendMessage(new TextComponent("§fVersion: §e" + getVersionStringPlayer(target)));
     }
 
