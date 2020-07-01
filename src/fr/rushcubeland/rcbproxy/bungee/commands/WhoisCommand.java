@@ -2,6 +2,7 @@ package fr.rushcubeland.rcbproxy.bungee.commands;
 
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.account.Account;
+import fr.rushcubeland.rcbproxy.bungee.mod.ModModerator;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -31,14 +32,22 @@ public class WhoisCommand extends Command {
             }
             if(args.length == 1){
                 ProxiedPlayer target = ProxyServer.getInstance().getPlayer(args[0]);
-                infos(player, target);
+                if(target != null){
+                    infos(player, target);
+                }
             }
         }
     }
 
     public void infos(ProxiedPlayer sender, ProxiedPlayer target) {
         Optional<Account> account = RcbProxy.getInstance().getAccount(target);
-        account.ifPresent(value -> sender.sendMessage(new TextComponent("§6[Whois] " + value.getDatarank().getRank().getPrefix() + target.getName() + " :")));
+        if(ModModerator.isInModData(target.getUniqueId().toString())){
+            account.ifPresent(value -> sender.sendMessage(new TextComponent("§6[Whois] " + value.getDatarank().getRank().getPrefix() + target.getName() + "§6(MOD)"+" :")));
+        }
+        else
+        {
+            account.ifPresent(value -> sender.sendMessage(new TextComponent("§6[Whois] " + value.getDatarank().getRank().getPrefix() + target.getName() + " :")));
+        }
         String ip = target.getAddress().getHostString();
         int port = target.getAddress().getPort();
         sender.sendMessage(new TextComponent("§fConnexion: §7" + ip + ":" + port));
