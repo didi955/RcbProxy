@@ -5,12 +5,13 @@ import fr.rushcubeland.rcbproxy.bukkit.mod.ModModerator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class JoinEvent implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onJoin(PlayerJoinEvent e){
         if(ModModerator.isInModData(e.getPlayer().getUniqueId().toString())){
             e.setJoinMessage(null);
@@ -18,7 +19,9 @@ public class JoinEvent implements Listener {
             e.getPlayer().setFlying(true);
             ModModerator.giveTools(e.getPlayer().getUniqueId().toString());
             for(Player pls : Bukkit.getOnlinePlayers()){
-                pls.hidePlayer(RcbProxy.getInstance(), e.getPlayer());
+                if(!ModModerator.isInModData(pls.getUniqueId().toString())){
+                    pls.hidePlayer(RcbProxy.getInstance(), e.getPlayer());
+                }
             }
         }
         else
