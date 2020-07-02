@@ -3,6 +3,7 @@ package fr.rushcubeland.rcbproxy.bungee.listeners;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import fr.rushcubeland.rcbproxy.bungee.account.RankUnit;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.LoginEvent;
@@ -15,6 +16,8 @@ public class ProxiedPlayerJoin implements Listener {
     @EventHandler
     public void onConnect(PostLoginEvent e){
         ProxiedPlayer player = e.getPlayer();
+
+        player.connect(ProxyServer.getInstance().getServerInfo("Lobby"));
 
         Account account = new Account(player.getUniqueId());
         account.onLogin();

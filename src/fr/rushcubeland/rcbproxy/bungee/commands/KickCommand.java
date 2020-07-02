@@ -34,7 +34,7 @@ public class KickCommand extends Command {
                     player.sendMessage(new TextComponent("§cCe joueur n'est pas connecté !"));
                     return;
                 }
-                target.disconnect(new TextComponent("§cVous avez été kick"));
+                target.disconnect(new TextComponent("§cVous avez été kick !"));
             }
             String reason = "";
             for (int i = 1; i < args.length; i++) {
@@ -46,7 +46,7 @@ public class KickCommand extends Command {
                     player.sendMessage(new TextComponent("§cCe joueur n'est pas connecté !"));
                     return;
                 }
-                target.disconnect(new TextComponent("§6Vous avez été §ckick !\n §eRaison: " + reason));
+                target.disconnect(new TextComponent("§6Vous avez été §ckick !\n  \n§eRaison: §c" + reason));
             }
         }
     }

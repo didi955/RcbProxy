@@ -81,6 +81,8 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new PunishGUICommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new KickCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new ModModeratorCommand());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new StaffChatCommand());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new ReportCommand());
     }
 
     private void initAllRankPermissions(){

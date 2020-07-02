@@ -24,7 +24,7 @@ public class PunishGUICommand extends Command {
                 return;
             }
             if(args.length < 1){
-                player.sendMessage(new TextComponent("§c/ap <Joueur>"));
+                player.sendMessage(new TextComponent("§c/ap <joueur>"));
                 return;
 
             }

@@ -129,6 +129,20 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                 }
+                if(ReportCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                        .getCursor().contains(" ")) {
+
+                    e.getSuggestions().clear();
+
+                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+
+                    if (args.length == 1) {
+                        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                            e.getSuggestions().add(all.getName());
+                        }
+                        return;
+                    }
+                }
             }
         }
     }
