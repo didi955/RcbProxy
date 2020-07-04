@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Btp extends Command {
 
-    private static List<String> cmds = Arrays.asList(new String[] { "btp", "bungeeteleport" });
+    private static final List<String> cmds = Arrays.asList("btp", "bungeeteleport");
 
     public Btp(String name) {
         super(name);

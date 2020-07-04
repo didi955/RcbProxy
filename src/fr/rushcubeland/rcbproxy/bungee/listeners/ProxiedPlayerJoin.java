@@ -3,6 +3,7 @@ package fr.rushcubeland.rcbproxy.bungee.listeners;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import fr.rushcubeland.rcbproxy.bungee.account.RankUnit;
+import fr.rushcubeland.rcbproxy.bungee.friends.Friend;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -11,18 +12,21 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
 public class ProxiedPlayerJoin implements Listener {
 
     @EventHandler
     public void onConnect(PostLoginEvent e){
         ProxiedPlayer player = e.getPlayer();
 
-        player.connect(ProxyServer.getInstance().getServerInfo("Lobby"));
-
         Account account = new Account(player.getUniqueId());
         account.onLogin();
 
         initRankPlayerPermissions(player, account.getDatarank().getRank());
+
+        Friend.joinNotifFriends(player);
 
     }
 
@@ -46,4 +50,5 @@ public class ProxiedPlayerJoin implements Listener {
             player.setPermission(perm, true);
         }
     }
+
 }

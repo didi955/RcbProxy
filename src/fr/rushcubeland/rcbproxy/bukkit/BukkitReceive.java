@@ -1,5 +1,6 @@
 package fr.rushcubeland.rcbproxy.bukkit;
 
+import fr.rushcubeland.rcbproxy.bukkit.friends.FriendsGUI;
 import fr.rushcubeland.rcbproxy.bukkit.mod.ModModerator;
 import fr.rushcubeland.rcbproxy.bukkit.sanction.MuteData;
 import fr.rushcubeland.rcbproxy.bukkit.sanction.SanctionGUI;
@@ -70,6 +71,34 @@ public class BukkitReceive implements PluginMessageListener, Listener {
         if(action.equalsIgnoreCase("ModModeratorRemove")){
             String modUUID = received.get(0);
             ModModerator.removeMod(modUUID);
+        }
+        if(action.equalsIgnoreCase("SendFriendsDataRemove")){
+            String playerName = received.get(0);
+            String targetName = received.get(1);
+            Player player1 = Bukkit.getPlayer(playerName);
+            if(FriendsGUI.getDataFriends().containsKey(player1)){
+                FriendsGUI.getDataFriends().get(player1).remove(targetName);
+            }
+        }
+        if(action.equalsIgnoreCase("SendFriendsDataAdd")){
+            String playerName = received.get(0);
+            String targetName = received.get(1);
+            Player player1 = Bukkit.getPlayer(playerName);
+            if(FriendsGUI.getDataFriends().containsKey(player1)){
+                FriendsGUI.getDataFriends().get(player1).add(targetName);
+            }
+            else
+            {
+                ArrayList<String> n = new ArrayList<>();
+                n.add(targetName);
+                FriendsGUI.getDataFriends().put(player1, n);
+            }
+        }
+        if(action.equalsIgnoreCase("FriendsGUI")){
+            Player player1 = Bukkit.getPlayer(received.get(0));
+            if(player1 != null){
+                FriendsGUI.openFriendsGUI(player1);
+            }
         }
     }
 

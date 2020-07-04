@@ -73,6 +73,10 @@ public class RcbProxy extends Plugin {
             ProxyServer.getInstance().getPluginManager()
                     .registerCommand(this, new Btp(cmd));
         }
+        for(String cmd : FriendCommand.getCmds()) {
+            ProxyServer.getInstance().getPluginManager()
+                    .registerCommand(this, new FriendCommand(cmd));
+        }
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new BanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new UnbanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new WhoisCommand());

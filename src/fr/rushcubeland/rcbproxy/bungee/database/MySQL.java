@@ -66,6 +66,12 @@ public class MySQL {
                     "start BIGINT , " +
                     "end BIGINT, " +
                     "reason VARCHAR(64))");
+
+            update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "CREATE TABLE IF NOT EXISTS Proxyplayer_friends (" +
+                    "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                    "uuid VARCHAR(255), " +
+                    "friend VARCHAR(32))");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

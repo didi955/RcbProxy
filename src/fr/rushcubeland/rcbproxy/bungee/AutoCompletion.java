@@ -1,11 +1,14 @@
 package fr.rushcubeland.rcbproxy.bungee;
 
+import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import fr.rushcubeland.rcbproxy.bungee.commands.*;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+
+import java.util.Optional;
 
 public class AutoCompletion implements Listener {
 
@@ -136,11 +139,39 @@ public class AutoCompletion implements Listener {
 
                     ProxiedPlayer p = (ProxiedPlayer)e.getSender();
 
-                    if (args.length == 1) {
+                    if(args.length == 1) {
                         for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
                             e.getSuggestions().add(all.getName());
                         }
                         return;
+                    }
+                }
+                if(FriendCommand.getCmds().contains(args[0].replaceAll("/", "")) && e
+                .getCursor().contains(" ")){
+
+                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+
+                    if(args.length == 1){
+                        e.getSuggestions().add("list");
+                        e.getSuggestions().add("remove");
+                        e.getSuggestions().add("add");
+                        e.getSuggestions().add("accept");
+                        e.getSuggestions().add("deny");
+                    }
+                    if(args.length == 2){
+                        if(args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("rm") || args[1].equalsIgnoreCase("del") || args[1].equalsIgnoreCase("delete")){
+                            Optional<Account> account = RcbProxy.getInstance().getAccount(p);
+                            if(account.isPresent()){
+                                for(String friend : account.get().getDataFriends().getFriends()){
+                                    e.getSuggestions().add(friend);
+                                }
+                            }
+                        }
+                        if(args[1].equalsIgnoreCase("add")){
+                            for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                                e.getSuggestions().add(all.getName());
+                            }
+                        }
                     }
                 }
             }

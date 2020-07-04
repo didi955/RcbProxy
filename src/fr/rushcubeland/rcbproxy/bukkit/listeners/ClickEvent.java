@@ -30,6 +30,12 @@ public class ClickEvent implements Listener {
             if(SanctionGUI.getCurrentSanctionForATarget().containsKey(player)){
                 sanction = SanctionGUI.getCurrentSanctionForATarget().get(player);
             }
+            if (inventoryView.getTitle().equalsIgnoreCase("§d[Amis]")){
+                e.setCancelled(true);
+                if(e.getCurrentItem().getType().equals(Material.ACACIA_DOOR)){
+                    player.closeInventory();
+                }
+            }
             if(inventoryView.getTitle().equalsIgnoreCase("§6Sanction §e> §c" + targetname)){
                 e.setCancelled(true);
                 if(e.getCurrentItem().getType().equals(Material.ACACIA_DOOR)){
