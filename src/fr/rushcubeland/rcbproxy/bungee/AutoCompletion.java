@@ -175,6 +175,24 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                 }
+                if(MPCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                        .getCursor().contains(" ")) {
+
+                    e.getSuggestions().clear();
+
+                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+
+                    if(args.length == 1) {
+                        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                            e.getSuggestions().add(all.getName());
+                        }
+                        return;
+                    }
+                    if (args.length == 2 && getSpace(e.getCursor()) == 1) {
+                        addSuggestions(e, args);
+                        return;
+                    }
+                }
                 if(FriendCommand.getCmds().contains(args[0].replaceAll("/", "")) && e
                 .getCursor().contains(" ")){
 
@@ -218,7 +236,7 @@ public class AutoCompletion implements Listener {
         String check = args[args.length - 1];
         List<String> argFriend = Arrays.asList("list", "remove", "deny", "accept", "add");
 
-        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+        for(ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
             if (all.getName().toLowerCase().startsWith(check)) {
                 e.getSuggestions().add(all.getName());
             }

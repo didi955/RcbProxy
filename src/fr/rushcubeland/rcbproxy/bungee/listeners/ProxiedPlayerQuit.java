@@ -15,11 +15,18 @@ public class ProxiedPlayerQuit implements Listener {
     @EventHandler
     public void onQuit(PlayerDisconnectEvent e){
         ProxiedPlayer player = e.getPlayer();
+        removeMpData(player);
         Friend.quitNotifFriends(player);
         Friend.onQuit(player);
         Optional<Account> account = RcbProxy.getInstance().getAccount(player);
         account.ifPresent(Account::onLogout);
 
+    }
+
+    private void removeMpData(ProxiedPlayer player){
+        ProxiedPlayer target = RcbProxy.getInstance().getMpData().get(player);
+        RcbProxy.getInstance().getMpData().remove(target);
+        RcbProxy.getInstance().getMpData().remove(player);
     }
 
 }

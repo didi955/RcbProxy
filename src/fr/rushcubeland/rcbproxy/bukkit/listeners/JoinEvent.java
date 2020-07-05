@@ -11,8 +11,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class JoinEvent implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e){
+        e.getPlayer().getInventory().clear();
         if(ModModerator.isInModData(e.getPlayer().getUniqueId().toString())){
             e.setJoinMessage(null);
             e.getPlayer().setAllowFlight(true);

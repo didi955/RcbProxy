@@ -1,6 +1,7 @@
-package fr.rushcubeland.rcbproxy.bukkit.network;
+package fr.rushcubeland.rcbproxy.bungee.network;
 
-import fr.rushcubeland.rcbproxy.bungee.account.RankUnit;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public enum ServerUnit {
     private int port;
     private int slots;
     private String ip;
+    private ServerInfo serverInfo;
 
     ServerUnit(String name, ServerGroup serverGroup, int maxPlayers, String ip, int port){
         this.name = name;
@@ -26,6 +28,7 @@ public enum ServerUnit {
         this.port = port;
         this.ip = ip;
         serverGroup.getServersInGroup().add(this);
+        serverInfo = ProxyServer.getInstance().getServers().get(name);
     }
 
     public static Optional<ServerUnit> getByName(String name){
@@ -36,6 +39,9 @@ public enum ServerUnit {
         return Arrays.stream(values()).filter(r -> r.getPort() == port).findFirst();
     }
 
+    public ServerInfo getServerInfo() {
+        return serverInfo;
+    }
 
     public String getName() {
         return name;
@@ -64,5 +70,6 @@ public enum ServerUnit {
     public String getIp() {
         return ip;
     }
+
 
 }

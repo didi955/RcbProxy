@@ -35,8 +35,8 @@ public class ModModerator {
             giveTools(targetUUID);
             Player mod = Bukkit.getPlayer(UUID.fromString(targetUUID));
             if(mod != null){
-                mod.setFlying(true);
                 mod.setAllowFlight(true);
+                mod.setFlying(true);
                 for(Player pls : Bukkit.getOnlinePlayers()){
                     pls.hidePlayer(RcbProxy.getInstance(), mod);
                 }

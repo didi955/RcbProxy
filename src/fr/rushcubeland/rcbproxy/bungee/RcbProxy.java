@@ -16,6 +16,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,8 @@ public class RcbProxy extends Plugin {
 
     private BanManager banManager;
     private MuteManager muteManager;
+
+    private final HashMap<ProxiedPlayer, ProxiedPlayer> mpData = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -77,6 +80,14 @@ public class RcbProxy extends Plugin {
             ProxyServer.getInstance().getPluginManager()
                     .registerCommand(this, new FriendCommand(cmd));
         }
+        for(String cmd : HubCommand.getCmds()){
+            ProxyServer.getInstance().getPluginManager()
+                    .registerCommand(this, new HubCommand(cmd));
+        }
+        for(String cmd : ReplyCommand.getCmds()){
+            ProxyServer.getInstance().getPluginManager()
+                    .registerCommand(this, new ReplyCommand(cmd));
+        }
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new BanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new UnbanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new WhoisCommand());
@@ -87,6 +98,7 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new ModModeratorCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new StaffChatCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new ReportCommand());
+        ProxyServer.getInstance().getPluginManager().registerCommand(this, new MPCommand());
     }
 
     private void initAllRankPermissions(){
@@ -119,5 +131,9 @@ public class RcbProxy extends Plugin {
 
     public String getChannel() {
         return channel;
+    }
+
+    public HashMap<ProxiedPlayer, ProxiedPlayer> getMpData() {
+        return mpData;
     }
 }
