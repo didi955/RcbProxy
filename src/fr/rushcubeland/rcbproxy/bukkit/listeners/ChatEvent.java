@@ -2,12 +2,15 @@ package fr.rushcubeland.rcbproxy.bukkit.listeners;
 
 import fr.rushcubeland.rcbproxy.bukkit.sanction.MuteData;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.Optional;
+
 public class ChatEvent implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e){
         if(MuteData.isInMuteData(e.getPlayer().getUniqueId().toString())){
             if(!e.getMessage().startsWith("/")){

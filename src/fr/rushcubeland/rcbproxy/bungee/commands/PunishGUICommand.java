@@ -1,6 +1,7 @@
 package fr.rushcubeland.rcbproxy.bungee.commands;
 
 import fr.rushcubeland.rcbproxy.bungee.BungeeSend;
+import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.utils.UUIDFetcher;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;

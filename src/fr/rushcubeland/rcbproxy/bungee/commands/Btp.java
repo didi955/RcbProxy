@@ -44,7 +44,7 @@ public class Btp extends Command {
         }
         if (args.length == 1) {
 
-            ProxiedPlayer from = (ProxiedPlayer)sender;
+            ProxiedPlayer from = (ProxiedPlayer) sender;
             ProxiedPlayer to = ProxyServer.getInstance().getPlayer(args[0]);
 
 
@@ -84,6 +84,9 @@ public class Btp extends Command {
     }
 
     public static void teleport(ProxiedPlayer from, ProxiedPlayer to) {
+        if(from == to){
+            return;
+        }
         if (from.getServer().getInfo() != to.getServer().getInfo()) {
             from.connect(to.getServer().getInfo());
         }

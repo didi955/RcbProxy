@@ -36,7 +36,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                         return;
                     }
                     if (args.length == 2) {
@@ -46,7 +46,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if (args.length == 3 && getSpace(e.getCursor()) == 2) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                     }
                 }
                 if(WhoisCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
@@ -63,7 +63,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                         return;
                     }
                 }
@@ -81,7 +81,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                         return;
                     }
                 }
@@ -99,7 +99,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                         return;
                     }
                 }
@@ -117,7 +117,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                         return;
                     }
                 }
@@ -135,7 +135,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                         return;
                     }
                 }
@@ -153,7 +153,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                         return;
                     }
                 }
@@ -165,13 +165,26 @@ public class AutoCompletion implements Listener {
                     ProxiedPlayer p = (ProxiedPlayer)e.getSender();
 
                     if(args.length == 1) {
-                        for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
-                            e.getSuggestions().add(all.getName());
+                        if(p.hasPermission("rcbproxy.report")){
+                            e.getSuggestions().add("on");
+                            e.getSuggestions().add("off");
+                        }
+                        else
+                        {
+                            for(ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                                e.getSuggestions().add(all.getName());
+                            }
                         }
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        if(p.hasPermission("rcbproxy.report")){
+                            addSuggestionsReportToogle(e, args);
+                        }
+                        else
+                        {
+                            addSuggestionsPlayers(e, args);
+                        }
                         return;
                     }
                 }
@@ -189,7 +202,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                         return;
                     }
                 }
@@ -206,7 +219,7 @@ public class AutoCompletion implements Listener {
                         e.getSuggestions().add("deny");
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
-                        addSuggestions(e, args);
+                        addSuggestionsArgFriends(e, args);
                         return;
                     }
                     if(args.length == 2){
@@ -225,22 +238,38 @@ public class AutoCompletion implements Listener {
                         }
                     }
                     if (args.length == 3 && getSpace(e.getCursor()) == 2) {
-                        addSuggestions(e, args);
+                        addSuggestionsPlayers(e, args);
                     }
                 }
             }
         }
     }
 
-    private void addSuggestions(TabCompleteEvent e, String[] args) {
+    private void addSuggestionsPlayers(TabCompleteEvent e, String[] args) {
         String check = args[args.length - 1];
-        List<String> argFriend = Arrays.asList("list", "remove", "deny", "accept", "add");
 
         for(ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
             if (all.getName().toLowerCase().startsWith(check)) {
                 e.getSuggestions().add(all.getName());
             }
         }
+    }
+
+    private void addSuggestionsReportToogle(TabCompleteEvent e, String[] args) {
+        String check = args[args.length - 1];
+        List<String> argstoogle = Arrays.asList("on", "off");
+
+        for(String s : argstoogle){
+            if(s.startsWith(check)){
+                e.getSuggestions().add(s);
+            }
+        }
+    }
+    
+    private void addSuggestionsArgFriends(TabCompleteEvent e, String[] args) {
+        String check = args[args.length - 1];
+        List<String> argFriend = Arrays.asList("list", "remove", "deny", "accept", "add");
+
         for(String s : argFriend){
             if(s.startsWith(check)){
                 e.getSuggestions().add(s);
