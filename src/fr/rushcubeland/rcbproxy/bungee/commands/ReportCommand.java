@@ -37,6 +37,7 @@ public class ReportCommand extends Command {
                 if(args.length == 0){
                     if(Report.getReportToogleData().containsKey(player)){
                         if(!Report.getReportToogleData().get(player)){
+                            Report.getReportToogleData().put(player, true);
                             player.sendMessage(new TextComponent("§d[Report] §aactivé"));
                         }
                         else
