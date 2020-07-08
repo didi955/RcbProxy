@@ -29,17 +29,18 @@ public class Friend {
                 ProxiedPlayer target = ProxyServer.getInstance().getPlayer(targetName);
                 if(target != null){
                     Optional<Account> account2 = RcbProxy.getInstance().getAccount(target);
-                    account.get().getDataFriends().removeFriend(target.getName());
-                    account2.get().getDataFriends().removeFriend(player.getName());
-                    BungeeSend.sendFriendsDataRemove(player, targetName);
-                    BungeeSend.sendFriendsDataRemove(target, player.getName());
-                    target.sendMessage(new TextComponent("§d[Amis] §e" + account.get().getDatarank().getRank().getPrefix() + player.getName() + " §cvous a retiré de sa liste d'amis !"));
                     if(account2.isPresent()){
+                        account.get().getDataFriends().removeFriend(target.getName());
+                        account2.get().getDataFriends().removeFriend(player.getName());
+                        BungeeSend.sendFriendsDataRemove(player, targetName);
+                        BungeeSend.sendFriendsDataRemove(target, player.getName());
+                        target.sendMessage(new TextComponent("§d[Amis] §e" + account.get().getDatarank().getRank().getPrefix() + player.getName() + " §cvous a retiré de sa liste d'amis !"));
                         player.sendMessage(new TextComponent("§d[Amis] §cVous avez retiré §e" + account2.get().getDatarank().getRank().getPrefix() + target.getName() + " §cde votre liste d'amis !"));
                     }
                     else
                     {
-                        player.sendMessage(new TextComponent("§d[Amis] §cVous avez retiré §e" + target.getName() + " §cde votre liste d'amis !"));
+                        player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
+                        player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
                     }
                 }
                 else
@@ -209,7 +210,7 @@ public class Friend {
             for(String friend : account.get().getDataFriends().getFriends()){
                 ProxiedPlayer friendP = ProxyServer.getInstance().getPlayer(friend);
                 if(friendP != null){
-                    friendP.sendMessage(new TextComponent("§d[Ami] " + account.get().getDatarank().getRank().getPrefix() + player.getName() + " §cs'est déconnecté du serveur !"));
+                    friendP.sendMessage(new TextComponent("§d[Ami] §b" + player.getName() + " §cs'est déconnecté !"));
                 }
             }
         }
@@ -221,7 +222,7 @@ public class Friend {
             for(String friend : account.get().getDataFriends().getFriends()){
                 ProxiedPlayer friendP = ProxyServer.getInstance().getPlayer(friend);
                 if(friendP != null){
-                    friendP.sendMessage(new TextComponent("§d[Ami] " + account.get().getDatarank().getRank().getPrefix() + player.getName() + " §as'est connecté au serveur !"));
+                    friendP.sendMessage(new TextComponent("§d[Ami] §b" + player.getName() + " §as'est connecté !"));
                 }
             }
         }

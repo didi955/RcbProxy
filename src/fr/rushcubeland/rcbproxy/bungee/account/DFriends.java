@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class DFriends extends AbstractData {
 
-    private ArrayList<String> friends = new ArrayList<>();
+    private final ArrayList<String> friends = new ArrayList<>();
     private int maxFriends;
 
     public DFriends(UUID uuid){

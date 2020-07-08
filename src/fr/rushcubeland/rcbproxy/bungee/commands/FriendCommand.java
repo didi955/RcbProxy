@@ -75,6 +75,12 @@ public class FriendCommand extends Command {
                             player.sendMessage(new TextComponent("§d[Amis] §cImpossible de vous supprimer de votre liste d'amis :)"));
                         }
                     }
+                    else
+                    {
+                        player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
+                        player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
+                        return;
+                    }
                 }
                 if(args[0].equalsIgnoreCase("accept")){
                     ProxiedPlayer target = ProxyServer.getInstance().getPlayer(args[1]);

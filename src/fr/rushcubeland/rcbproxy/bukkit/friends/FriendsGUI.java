@@ -25,7 +25,7 @@ public class FriendsGUI {
                 Player target = Bukkit.getPlayer(friend);
                 ItemStack head;
                 if(target == null){
-                    head = new ItemBuilder(Material.PLAYER_HEAD).setName(friend).setLore("§c ", "§fStaut: §cHors-ligne").setSkullOwner(Bukkit.getOfflinePlayer(friend)).toItemStack();
+                    head = new ItemBuilder(Material.PLAYER_HEAD).setName("§b" + friend).setLore("§c ", "§fStatut: §cHors-ligne").setSkullOwner(Bukkit.getOfflinePlayer(friend)).toItemStack();
                 }
                 else
                 {

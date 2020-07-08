@@ -6,6 +6,7 @@ import fr.rushcubeland.rcbproxy.bungee.ban.BanManager;
 import fr.rushcubeland.rcbproxy.bungee.commands.*;
 import fr.rushcubeland.rcbproxy.bungee.mute.CheckMuteStateTask;
 import fr.rushcubeland.rcbproxy.bungee.mute.MuteManager;
+import fr.rushcubeland.rcbproxy.bungee.parties.Party;
 import fr.rushcubeland.rcbproxy.bungee.utils.TimeUnit;
 import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
@@ -24,6 +25,7 @@ public class RcbProxy extends Plugin {
 
     private static RcbProxy instance;
     private List<Account> accounts;
+    private List<Party> parties;
     public static String channel = "rcbproxy:main";
 
     private BanManager banManager;
@@ -42,6 +44,7 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxiedPlayerQuit());
 
         accounts = new ArrayList<>();
+        parties = new ArrayList<>();
 
         initCommands();
         TimeUnit.initTimeUnit();
@@ -88,6 +91,10 @@ public class RcbProxy extends Plugin {
             ProxyServer.getInstance().getPluginManager()
                     .registerCommand(this, new ReplyCommand(cmd));
         }
+        for(String cmd : PartyCommand.getCmds()){
+            ProxyServer.getInstance().getPluginManager()
+                    .registerCommand(this, new PartyCommand(cmd));
+        }
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new BanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new UnbanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new WhoisCommand());
@@ -115,6 +122,10 @@ public class RcbProxy extends Plugin {
 
     public List<Account> getAccounts() {
         return accounts;
+    }
+
+    public List<Party> getParties() {
+        return parties;
     }
 
     public Optional<Account> getAccount(ProxiedPlayer player){

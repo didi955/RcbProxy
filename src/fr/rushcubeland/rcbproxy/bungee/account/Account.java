@@ -17,12 +17,14 @@ public class Account extends AbstractData {
     private final DRank dataRank;
     private final DPermissions dataPermissions;
     private final DFriends dataFriends;
+    private final DParty dataParty;
 
     public Account(UUID uuid){
         this.uuid = uuid;
         this.dataRank = new DRank(uuid);
         this.dataPermissions = new DPermissions(uuid);
         this.dataFriends = new DFriends(uuid);
+        this.dataParty = new DParty(uuid);
     }
 
     private String[] getDataOfProxiedPlayerFromMySQL() {
@@ -199,7 +201,7 @@ public class Account extends AbstractData {
                         BungeeSend.sendFriendsDataAdd(getPlayer(), friends);
                     }
                 }
-            }, 4L, TimeUnit.SECONDS);
+            }, 5L, TimeUnit.SECONDS);
         }
     }
 
@@ -230,5 +232,9 @@ public class Account extends AbstractData {
 
     public DFriends getDataFriends() {
         return dataFriends;
+    }
+
+    public DParty getDataParty() {
+        return dataParty;
     }
 }
