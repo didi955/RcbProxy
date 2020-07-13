@@ -5,6 +5,7 @@ import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
+import fr.rushcubeland.rcbproxy.bungee.options.OptionUnit;
 import fr.rushcubeland.rcbproxy.bungee.utils.UUIDFetcher;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -137,48 +138,54 @@ public class Friend {
         Optional<Account> account2 = RcbProxy.getInstance().getAccount(receiver);
         if(account.isPresent() && account2.isPresent()){
             if(!account.get().getDataFriends().areFriendWith(receiver.getName())){
-                if(datarequest.containsKey(sender)){
-                    if(!(datarequest.get(sender).contains(receiver))){
+                if(account2.get().getDataOptions().getStateFriendRequests().equals(OptionUnit.OPEN)){
+                    if(datarequest.containsKey(sender)){
+                        if(!(datarequest.get(sender).contains(receiver))){
+                            sender.sendMessage(new TextComponent("§d[Amis] §6Vous avez §aenvoyé §6une requête d'ami à " + account2.get().getDatarank().getRank().getPrefix() + receiver.getName()));
+                            receiver.sendMessage(new TextComponent("§e-----------------------------"));
+                            receiver.sendMessage(new TextComponent("§d[Amis] §6Vous avez §arecu §6une requête d'ami de " + account.get().getDatarank().getRank().getPrefix() + sender.getName()));
+                            datarequest.get(sender).add(receiver);
+                            ComponentBuilder componentBuilder = new ComponentBuilder("      ");
+                            TextComponent accept = new TextComponent("§a[Accepter]");
+                            accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f accept " + sender.getName()));
+                            TextComponent deny = new TextComponent("§c[Refuser]");
+                            deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f deny " + sender.getName()));
+                            componentBuilder.append(accept);
+                            componentBuilder.append(new TextComponent("      "));
+                            componentBuilder.append(deny);
+                            receiver.sendMessage(componentBuilder.create());
+                            receiver.sendMessage(new TextComponent("§e-----------------------------"));
+                        }
+                        else
+                        {
+                            sender.sendMessage(new TextComponent("§d[Amis] §cVous avez déjà envoyé une requête d'ami à ce joueur !"));
+                        }
+                    }
+                    else
+                    {
                         sender.sendMessage(new TextComponent("§d[Amis] §6Vous avez §aenvoyé §6une requête d'ami à " + account2.get().getDatarank().getRank().getPrefix() + receiver.getName()));
                         receiver.sendMessage(new TextComponent("§e-----------------------------"));
                         receiver.sendMessage(new TextComponent("§d[Amis] §6Vous avez §arecu §6une requête d'ami de " + account.get().getDatarank().getRank().getPrefix() + sender.getName()));
-                        datarequest.get(sender).add(receiver);
+                        ArrayList<ProxiedPlayer> nouvelle = new ArrayList<>();
+                        nouvelle.add(receiver);
+                        datarequest.put(sender, nouvelle);
                         ComponentBuilder componentBuilder = new ComponentBuilder("      ");
                         TextComponent accept = new TextComponent("§a[Accepter]");
                         accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f accept " + sender.getName()));
+                        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("/f accept " + sender.getName())));
                         TextComponent deny = new TextComponent("§c[Refuser]");
                         deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f deny " + sender.getName()));
+                        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("/f deny " + sender.getName())));
                         componentBuilder.append(accept);
                         componentBuilder.append(new TextComponent("      "));
                         componentBuilder.append(deny);
                         receiver.sendMessage(componentBuilder.create());
                         receiver.sendMessage(new TextComponent("§e-----------------------------"));
                     }
-                    else
-                    {
-                        sender.sendMessage(new TextComponent("§d[Amis] §cVous avez déjà envoyé une requête d'ami à ce joueur !"));
-                    }
                 }
                 else
                 {
-                    sender.sendMessage(new TextComponent("§d[Amis] §6Vous avez §aenvoyé §6une requête d'ami à " + account2.get().getDatarank().getRank().getPrefix() + receiver.getName()));
-                    receiver.sendMessage(new TextComponent("§e-----------------------------"));
-                    receiver.sendMessage(new TextComponent("§d[Amis] §6Vous avez §arecu §6une requête d'ami de " + account.get().getDatarank().getRank().getPrefix() + sender.getName()));
-                    ArrayList<ProxiedPlayer> nouvelle = new ArrayList<>();
-                    nouvelle.add(receiver);
-                    datarequest.put(sender, nouvelle);
-                    ComponentBuilder componentBuilder = new ComponentBuilder("      ");
-                    TextComponent accept = new TextComponent("§a[Accepter]");
-                    accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f accept " + sender.getName()));
-                    accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("/f accept " + sender.getName())));
-                    TextComponent deny = new TextComponent("§c[Refuser]");
-                    deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f deny " + sender.getName()));
-                    deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("/f deny " + sender.getName())));
-                    componentBuilder.append(accept);
-                    componentBuilder.append(new TextComponent("      "));
-                    componentBuilder.append(deny);
-                    receiver.sendMessage(componentBuilder.create());
-                    receiver.sendMessage(new TextComponent("§e-----------------------------"));
+                    sender.sendMessage(new TextComponent("§d[Amis] §cCe joueur ne souhaite pas recevoir des requêtes d'amis !"));
                 }
             }
             else
@@ -210,7 +217,12 @@ public class Friend {
             for(String friend : account.get().getDataFriends().getFriends()){
                 ProxiedPlayer friendP = ProxyServer.getInstance().getPlayer(friend);
                 if(friendP != null){
-                    friendP.sendMessage(new TextComponent("§d[Ami] §b" + player.getName() + " §cs'est déconnecté !"));
+                    Optional<Account> account2 = RcbProxy.getInstance().getAccount(friendP);
+                    if(account2.isPresent()){
+                        if(account2.get().getDataOptions().getStateFriendsStatutNotif().equals(OptionUnit.OPEN)){
+                            friendP.sendMessage(new TextComponent("§d[Ami] §b" + player.getName() + " §cs'est déconnecté !"));
+                        }
+                    }
                 }
             }
         }
@@ -222,7 +234,12 @@ public class Friend {
             for(String friend : account.get().getDataFriends().getFriends()){
                 ProxiedPlayer friendP = ProxyServer.getInstance().getPlayer(friend);
                 if(friendP != null){
-                    friendP.sendMessage(new TextComponent("§d[Ami] §b" + player.getName() + " §as'est connecté !"));
+                    Optional<Account> account2 = RcbProxy.getInstance().getAccount(friendP);
+                    if(account2.isPresent()){
+                        if(account2.get().getDataOptions().getStateFriendsStatutNotif().equals(OptionUnit.OPEN)){
+                            friendP.sendMessage(new TextComponent("§d[Ami] §b" + player.getName() + " §as'est connecté !"));
+                        }
+                    }
                 }
             }
         }

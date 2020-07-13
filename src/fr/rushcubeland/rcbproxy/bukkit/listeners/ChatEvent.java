@@ -1,6 +1,9 @@
 package fr.rushcubeland.rcbproxy.bukkit.listeners;
 
+import fr.rushcubeland.rcbproxy.bukkit.options.Options;
 import fr.rushcubeland.rcbproxy.bukkit.sanction.MuteData;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,6 +19,11 @@ public class ChatEvent implements Listener {
             if(!e.getMessage().startsWith("/")){
                 e.setCancelled(true);
                 e.getPlayer().sendMessage("§cVous avez été mute !");
+            }
+        }
+        for(Player pls : Bukkit.getOnlinePlayers()){
+            if(!Options.hasChatActivated(e.getPlayer())){
+                e.getRecipients().remove(e.getPlayer());
             }
         }
     }

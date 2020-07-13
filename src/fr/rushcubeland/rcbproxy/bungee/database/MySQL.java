@@ -72,6 +72,14 @@ public class MySQL {
                     "uuid VARCHAR(255), " +
                     "friend VARCHAR(32))");
 
+            update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "CREATE TABLE IF NOT EXISTS Proxyplayer_options (" +
+                    "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                    "uuid VARCHAR(255), " +
+                    "state_party_invite VARCHAR(16), " +
+                    "state_friend_requests VARCHAR(16), " +
+                    "state_chat VARCHAR(16), " +
+                    "state_friends_statut_notif VARCHAR(16))");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

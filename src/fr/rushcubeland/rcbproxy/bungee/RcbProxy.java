@@ -1,9 +1,11 @@
 package fr.rushcubeland.rcbproxy.bungee;
 
+import com.google.common.io.ByteStreams;
 import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import fr.rushcubeland.rcbproxy.bungee.account.RankUnit;
 import fr.rushcubeland.rcbproxy.bungee.ban.BanManager;
 import fr.rushcubeland.rcbproxy.bungee.commands.*;
+import fr.rushcubeland.rcbproxy.bungee.listeners.ProxyPing;
 import fr.rushcubeland.rcbproxy.bungee.mute.CheckMuteStateTask;
 import fr.rushcubeland.rcbproxy.bungee.mute.MuteManager;
 import fr.rushcubeland.rcbproxy.bungee.parties.Party;
@@ -15,7 +17,11 @@ import fr.rushcubeland.rcbproxy.bungee.listeners.ProxiedPlayerQuit;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +39,8 @@ public class RcbProxy extends Plugin {
 
     private final HashMap<ProxiedPlayer, ProxiedPlayer> mpData = new HashMap<>();
 
+    private Configuration config;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -42,6 +50,7 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new AutoCompletion());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxiedPlayerJoin());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxiedPlayerQuit());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxyPing());
 
         accounts = new ArrayList<>();
         parties = new ArrayList<>();
@@ -95,6 +104,13 @@ public class RcbProxy extends Plugin {
             ProxyServer.getInstance().getPluginManager()
                     .registerCommand(this, new PartyCommand(cmd));
         }
+        /*
+        for(String cmd : SlotsCommand.getCmds()){
+            ProxyServer.getInstance().getPluginManager()
+                    .registerCommand(this, new SlotsCommand(cmd));
+        }
+
+         */
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new BanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new UnbanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new WhoisCommand());
@@ -106,6 +122,26 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new StaffChatCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new ReportCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new MPCommand());
+    }
+
+    private void loadConfig() {
+        try {
+            if (!getDataFolder().exists()) {
+                getDataFolder().mkdir();
+            }
+
+            File configFile = new File(getDataFolder(), "config.yml");
+            if (!configFile.exists()) {
+                try (InputStream is = getResourceAsStream("config.yml");
+                     OutputStream os = new FileOutputStream(configFile)) {
+                    ByteStreams.copy(is, os);
+                }
+            }
+
+            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to load configuration", e);
+        }
     }
 
     private void initAllRankPermissions(){
@@ -146,5 +182,9 @@ public class RcbProxy extends Plugin {
 
     public HashMap<ProxiedPlayer, ProxiedPlayer> getMpData() {
         return mpData;
+    }
+
+    public Configuration getConfig() {
+        return config;
     }
 }

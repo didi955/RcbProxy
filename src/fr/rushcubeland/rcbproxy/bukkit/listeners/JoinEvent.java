@@ -3,6 +3,7 @@ package fr.rushcubeland.rcbproxy.bukkit.listeners;
 import fr.rushcubeland.rcbproxy.bukkit.RcbProxy;
 import fr.rushcubeland.rcbproxy.bukkit.mod.ModModerator;
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

@@ -2,6 +2,7 @@ package fr.rushcubeland.rcbproxy.bungee.parties;
 
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.account.Account;
+import fr.rushcubeland.rcbproxy.bungee.options.OptionUnit;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -87,15 +88,67 @@ public class Parties {
         if(account.isPresent() && account2.isPresent()){
             if(account.get().getDataParty().isInParty() && account2.get().getDataParty().isInParty()){
                 if(!account.get().getDataParty().getParty().equals(account2.get().getDataParty().getParty())){
+                    if(account2.get().getDataOptions().getStatePartyInvite().equals(OptionUnit.OPEN)){
+                        sender.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §aenvoyé §6une invitation de groupe à " + account2.get().getDatarank().getRank().getPrefix() + target.getName()));
+                        target.sendMessage(new TextComponent("§e-----------------------------"));
+                        target.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §arecu §6une invitation de groupe de " + account.get().getDatarank().getRank().getPrefix() + sender.getName()));
+                        ComponentBuilder componentBuilder = new ComponentBuilder("      ");
+                        TextComponent accept = new TextComponent("§a[Accepter]");
+                        accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group accept " + sender.getDisplayName()));
+                        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group accept " + sender.getDisplayName())));
+                        TextComponent deny = new TextComponent("§c[Refuser]");
+                        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group deny " + sender.getDisplayName()));
+                        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group deny " + sender.getDisplayName())));
+                        componentBuilder.append(accept);
+                        componentBuilder.append(new TextComponent("      "));
+                        componentBuilder.append(deny);
+                        target.sendMessage(componentBuilder.create());
+                        target.sendMessage(new TextComponent("§e-----------------------------"));
+                        HashMap<ProxiedPlayer, Party> h = new HashMap<>();
+                        h.put(target, account.get().getDataParty().getParty());
+                        datarequest.put(sender, h);
+                    }
+                    if(account2.get().getDataOptions().getStatePartyInvite().equals(OptionUnit.ONLY_FRIENDS) && account.get().getDataFriends().areFriendWith(target.getName())){
+                        sender.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §aenvoyé §6une invitation de groupe à " + account2.get().getDatarank().getRank().getPrefix() + target.getName()));
+                        target.sendMessage(new TextComponent("§e-----------------------------"));
+                        target.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §arecu §6une invitation de groupe de " + account.get().getDatarank().getRank().getPrefix() + sender.getName()));
+                        ComponentBuilder componentBuilder = new ComponentBuilder("      ");
+                        TextComponent accept = new TextComponent("§a[Accepter]");
+                        accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group accept " + sender.getDisplayName()));
+                        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group accept " + sender.getDisplayName())));
+                        TextComponent deny = new TextComponent("§c[Refuser]");
+                        deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group deny " + sender.getDisplayName()));
+                        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group deny " + sender.getDisplayName())));
+                        componentBuilder.append(accept);
+                        componentBuilder.append(new TextComponent("      "));
+                        componentBuilder.append(deny);
+                        target.sendMessage(componentBuilder.create());
+                        target.sendMessage(new TextComponent("§e-----------------------------"));
+                        HashMap<ProxiedPlayer, Party> h = new HashMap<>();
+                        h.put(target, account.get().getDataParty().getParty());
+                        datarequest.put(sender, h);
+                    }
+                }
+                else 
+                {
+                    sender.sendMessage(new TextComponent("§d[Groupe] §cVous etes déjà dans le meme groupe !"));
+                    return;
+                }
+            }
+            else if(account.get().getDataFriends().areFriendWith(target.getName()) && account2.get().getDataOptions().getStatePartyInvite().equals(OptionUnit.ONLY_FRIENDS)){
+                if(!account.get().getDataParty().isInParty()){
+                    Party party = new Party(5);
+                    party.addPlayer(sender);
+                    party.setCaptain(sender);
                     sender.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §aenvoyé §6une invitation de groupe à " + account2.get().getDatarank().getRank().getPrefix() + target.getName()));
                     target.sendMessage(new TextComponent("§e-----------------------------"));
                     target.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §arecu §6une invitation de groupe de " + account.get().getDatarank().getRank().getPrefix() + sender.getName()));
                     ComponentBuilder componentBuilder = new ComponentBuilder("      ");
                     TextComponent accept = new TextComponent("§a[Accepter]");
-                    accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group accept " + sender.getDisplayName()));
+                    accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group accept " + sender.getName()));
                     accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group accept " + sender.getDisplayName())));
                     TextComponent deny = new TextComponent("§c[Refuser]");
-                    deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group deny " + sender.getDisplayName()));
+                    deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group deny " + sender.getName()));
                     deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group deny " + sender.getDisplayName())));
                     componentBuilder.append(accept);
                     componentBuilder.append(new TextComponent("      "));
@@ -106,56 +159,36 @@ public class Parties {
                     h.put(target, account.get().getDataParty().getParty());
                     datarequest.put(sender, h);
                 }
-                else 
+                else
                 {
-                    sender.sendMessage(new TextComponent("§d[Groupe] §cVous etes déjà dans le meme groupe !"));
-                    return;
+                    sender.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §aenvoyé §6une invitation de groupe à " + account2.get().getDatarank().getRank().getPrefix() + target.getName()));
+                    target.sendMessage(new TextComponent("§e-----------------------------"));
+                    target.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §arecu §6une invitation de groupe de " + account.get().getDatarank().getRank().getPrefix() + sender.getName()));
+                    ComponentBuilder componentBuilder = new ComponentBuilder("      ");
+                    TextComponent accept = new TextComponent("§a[Accepter]");
+                    accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group accept " + sender.getName()));
+                    accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group accept " + sender.getDisplayName())));
+                    TextComponent deny = new TextComponent("§c[Refuser]");
+                    deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group deny " + sender.getName()));
+                    deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group deny " + sender.getDisplayName())));
+                    componentBuilder.append(accept);
+                    componentBuilder.append(new TextComponent("      "));
+                    componentBuilder.append(deny);
+                    target.sendMessage(componentBuilder.create());
+                    target.sendMessage(new TextComponent("§e-----------------------------"));
+                    HashMap<ProxiedPlayer, Party> h = new HashMap<>();
+                    h.put(target, account.get().getDataParty().getParty());
+                    datarequest.put(sender, h);
                 }
             }
-            else if(!account.get().getDataParty().isInParty()){
-                Party party = new Party(5);
-                party.addPlayer(sender);
-                party.setCaptain(sender);
-                sender.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §aenvoyé §6une invitation de groupe à " + account2.get().getDatarank().getRank().getPrefix() + target.getName()));
-                target.sendMessage(new TextComponent("§e-----------------------------"));
-                target.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §arecu §6une invitation de groupe de " + account.get().getDatarank().getRank().getPrefix() + sender.getName()));
-                ComponentBuilder componentBuilder = new ComponentBuilder("      ");
-                TextComponent accept = new TextComponent("§a[Accepter]");
-                accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group accept " + sender.getName()));
-                accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group accept " + sender.getDisplayName())));
-                TextComponent deny = new TextComponent("§c[Refuser]");
-                deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group deny " + sender.getName()));
-                deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group deny " + sender.getDisplayName())));
-                componentBuilder.append(accept);
-                componentBuilder.append(new TextComponent("      "));
-                componentBuilder.append(deny);
-                target.sendMessage(componentBuilder.create());
-                target.sendMessage(new TextComponent("§e-----------------------------"));
-                HashMap<ProxiedPlayer, Party> h = new HashMap<>();
-                h.put(target, account.get().getDataParty().getParty());
-                datarequest.put(sender, h);
+            else if(account2.get().getDataOptions().getStatePartyInvite().equals(OptionUnit.NEVER)){
+                sender.sendMessage(new TextComponent("§d[Groupe] §cCe joueur ne souhaite pas recevoir d'invitations de groupe !"));
+                return;
             }
             else
             {
-
-                sender.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §aenvoyé §6une invitation de groupe à " + account2.get().getDatarank().getRank().getPrefix() + target.getName()));
-                target.sendMessage(new TextComponent("§e-----------------------------"));
-                target.sendMessage(new TextComponent("§d[Groupe] §6Vous avez §arecu §6une invitation de groupe de " + account.get().getDatarank().getRank().getPrefix() + sender.getName()));
-                ComponentBuilder componentBuilder = new ComponentBuilder("      ");
-                TextComponent accept = new TextComponent("§a[Accepter]");
-                accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group accept " + sender.getName()));
-                accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group accept " + sender.getDisplayName())));
-                TextComponent deny = new TextComponent("§c[Refuser]");
-                deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/group deny " + sender.getName()));
-                deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,  TextComponent.fromLegacyText("/group deny " + sender.getDisplayName())));
-                componentBuilder.append(accept);
-                componentBuilder.append(new TextComponent("      "));
-                componentBuilder.append(deny);
-                target.sendMessage(componentBuilder.create());
-                target.sendMessage(new TextComponent("§e-----------------------------"));
-                HashMap<ProxiedPlayer, Party> h = new HashMap<>();
-                h.put(target, account.get().getDataParty().getParty());
-                datarequest.put(sender, h);
+                sender.sendMessage(new TextComponent("§d[Groupe] §cCe joueur ne souhaite pas recevoir d'invitations provenant de vous !"));
+                return;
             }
         }
     }

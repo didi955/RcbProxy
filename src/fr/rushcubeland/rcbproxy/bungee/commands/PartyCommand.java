@@ -90,7 +90,8 @@ public class PartyCommand extends Command {
                         }
                         else
                         {
-                            player.sendMessage(new TextComponent("§d[Groupe] §cVous ne pouvez pas dissoudre le groupe en n'etant pas capitaine !"));
+                            player.sendMessage(new TextComponent("§d[Groupe] §cVous ne pouvez pas dissoudre le groupe en"));
+                            player.sendMessage(new TextComponent("§cn'etant pas capitaine !"));
                         }
                     }
                     else
@@ -245,8 +246,8 @@ public class PartyCommand extends Command {
         player.sendMessage(new TextComponent("§6/group add <joueur> - §eEnvoyer une invitation de groupe"));
         player.sendMessage(new TextComponent("§6/group remove <joueur> - §eExclure un joueur de votre groupe"));
         player.sendMessage(new TextComponent("§6/group leave - §eQuitter votre groupe"));
-        player.sendMessage(new TextComponent("§6/group lead <joueur> - §eDéfinir le role de capitaine à un joueur"));
-        player.sendMessage(new TextComponent("§ede votre groupe"));
+        player.sendMessage(new TextComponent("§6/group lead <joueur> - §eDéfinir le role de capitaine"));
+        player.sendMessage(new TextComponent("§e à un joueur de votre groupe"));
         player.sendMessage(new TextComponent("§6/group accept <joueur> - §eAccepter l'invitation d'un joueur"));
         player.sendMessage(new TextComponent("§epour rejoindre son groupe"));
         player.sendMessage(new TextComponent("§6/group deny <joueur> - §eRefuser l'invitation d'un"));

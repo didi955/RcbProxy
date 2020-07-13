@@ -211,6 +211,8 @@ public class AutoCompletion implements Listener {
 
                     ProxiedPlayer p = (ProxiedPlayer)e.getSender();
 
+                    e.getSuggestions().clear();
+
                     if(args.length == 1){
                         e.getSuggestions().add("list");
                         e.getSuggestions().add("remove");
@@ -228,6 +230,47 @@ public class AutoCompletion implements Listener {
                             if(account.isPresent()){
                                 for(String friend : account.get().getDataFriends().getFriends()){
                                     e.getSuggestions().add(friend);
+                                }
+                            }
+                        }
+                        if(args[1].equalsIgnoreCase("add")){
+                            for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
+                                e.getSuggestions().add(all.getName());
+                            }
+                        }
+                    }
+                    if (args.length == 3 && getSpace(e.getCursor()) == 2) {
+                        addSuggestionsPlayers(e, args);
+                    }
+                }
+                if(PartyCommand.getCmds().contains(args[0].replaceAll("/", "")) && e
+                .getCursor().contains(" ")){
+
+                    ProxiedPlayer p = (ProxiedPlayer) e.getSender();
+
+                    e.getSuggestions().clear();
+
+                    if(args.length == 1){
+                        e.getSuggestions().add("list");
+                        e.getSuggestions().add("remove");
+                        e.getSuggestions().add("add");
+                        e.getSuggestions().add("accept");
+                        e.getSuggestions().add("deny");
+                        e.getSuggestions().add("disband");
+                        e.getSuggestions().add("leave");
+                    }
+                    if (args.length == 2 && getSpace(e.getCursor()) == 1) {
+                        addSuggestionsArgParty(e, args);
+                        return;
+                    }
+                    if(args.length == 2){
+                        if(args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("rm") || args[1].equalsIgnoreCase("del") || args[1].equalsIgnoreCase("delete")){
+                            Optional<Account> account = RcbProxy.getInstance().getAccount(p);
+                            if(account.isPresent()){
+                                if(account.get().getDataParty().isInParty()){
+                                    for(ProxiedPlayer pls : account.get().getDataParty().getParty().getPlayers()){
+                                        e.getSuggestions().add(pls.getDisplayName());
+                                    }
                                 }
                             }
                         }
@@ -277,6 +320,16 @@ public class AutoCompletion implements Listener {
         }
     }
 
+    private void addSuggestionsArgParty(TabCompleteEvent e, String[] args) {
+        String check = args[args.length - 1];
+        List<String> argParty = Arrays.asList("list", "remove", "deny", "accept", "add", "leave", "disband");
+
+        for(String s : argParty){
+            if(s.startsWith(check)){
+                e.getSuggestions().add(s);
+            }
+        }
+    }
 
     public static int getSpace(String s) {
         int space = 0;
