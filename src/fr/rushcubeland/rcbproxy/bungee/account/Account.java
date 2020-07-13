@@ -153,6 +153,28 @@ public class Account extends AbstractData {
                 exception.printStackTrace();
             }
         }
+        for(String removeF : dataFriends.getRemovingFriends()){
+            try {
+                MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT friend FROM Proxyplayer_friends WHERE uuid='%s' AND friend='%s'",
+                        getUUID(), removeF), rs -> {
+                    try {
+                        if(rs.next()){
+                            try {
+                                MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("DELETE FROM Proxyplayer_friends WHERE uuid='%s' AND friend='%s'",
+                                        getUUID(), removeF));
+
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            }
+                        }
+                    } catch (SQLException exception) {
+                        exception.printStackTrace();
+                    }
+                });
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
+        }
     }
 
     private void sendDataOfProxiedPlayerToMysql() {

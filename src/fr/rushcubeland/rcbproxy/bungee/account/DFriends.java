@@ -6,6 +6,7 @@ import java.util.UUID;
 public class DFriends extends AbstractData {
 
     private final ArrayList<String> friends = new ArrayList<>();
+    private final ArrayList<String> removingFriends = new ArrayList<>();
     private int maxFriends;
 
     public DFriends(UUID uuid){
@@ -19,12 +20,16 @@ public class DFriends extends AbstractData {
     public void addFriend(String name){
         if(!friends.contains(name)){
             friends.add(name);
+            if(removingFriends.contains(name)){
+                removingFriends.remove(name);
+            }
         }
     }
 
     public void removeFriend(String name){
         if(friends.contains(name)){
             friends.remove(name);
+            addRemovingFriend(name);
         }
     }
 
@@ -52,5 +57,15 @@ public class DFriends extends AbstractData {
 
     public void setMaxFriends(int maxFriends) {
         this.maxFriends = maxFriends;
+    }
+
+    public ArrayList<String> getRemovingFriends() {
+        return removingFriends;
+    }
+
+    public void addRemovingFriend(String name){
+        if(!this.removingFriends.contains(name)){
+            this.removingFriends.add(name);
+        }
     }
 }
