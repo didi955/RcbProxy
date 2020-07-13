@@ -179,7 +179,7 @@ public class Account extends AbstractData {
         if(newPlayer) {
             try {
                 MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Proxyplayer_options (uuid, state_party_invite, state_friend_requests, state_chat, state_friends_statut_notif) VALUES ('%s', '%s', '%s', '%s', '%s')",
-                        getUUID(), dataOptions.getStatePartyInvit().getName(), dataOptions.getStateFriendRequest().getName(), dataOptions.getStateChat().getName(), dataOptions.getStateFriendsStatutNotif().getName()));
+                        getUUID(), dataOptions.getStatePartyInvite().getName(), dataOptions.getStateFriendRequests().getName(), dataOptions.getStateChat().getName(), dataOptions.getStateFriendsStatutNotif().getName()));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -188,7 +188,7 @@ public class Account extends AbstractData {
         {
             try {
                 MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("UPDATE Proxyplayer_options SET state_party_invite='%s', state_friend_requests='%s', state_chat='%s', state_friends_statut_notif='%s' WHERE uuid='%s'",
-                        dataOptions.getStatePartyInvit().getName(), dataOptions.getStateFriendRequest().getName(), dataOptions.getStateChat().getName(), dataOptions.getStateFriendsStatutNotif().getName(), getUUID()));
+                        dataOptions.getStatePartyInvite().getName(), dataOptions.getStateFriendRequests().getName(), dataOptions.getStateChat().getName(), dataOptions.getStateFriendsStatutNotif().getName(), getUUID()));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -232,8 +232,8 @@ public class Account extends AbstractData {
             dataRank.setRank(RankUnit.JOUEUR);
             dataFriends.setMaxFriends(20);
             dataOptions.setStateChat(OptionUnit.OPEN);
-            dataOptions.setStateFriendRequest(OptionUnit.OPEN);
-            dataOptions.setStatePartyInvit(OptionUnit.OPEN);
+            dataOptions.setStateFriendRequests(OptionUnit.OPEN);
+            dataOptions.setStatePartyInvite(OptionUnit.OPEN);
             dataOptions.setStateFriendsStatutNotif(OptionUnit.OPEN);
         }
         else {
@@ -242,8 +242,8 @@ public class Account extends AbstractData {
                 dataPermissions.addPermission(perm);
                 getPlayer().setPermission(perm, true);
             }
-            dataOptions.setStatePartyInvit(OptionUnit.getByName(dataPlayerOptions[0]));
-            dataOptions.setStateFriendRequest(OptionUnit.getByName(dataPlayerOptions[1]));
+            dataOptions.setStatePartyInvite(OptionUnit.getByName(dataPlayerOptions[0]));
+            dataOptions.setStateFriendRequests(OptionUnit.getByName(dataPlayerOptions[1]));
             dataOptions.setStateChat(OptionUnit.getByName(dataPlayerOptions[2]));
             dataOptions.setStateFriendsStatutNotif(OptionUnit.getByName(dataPlayerOptions[3]));
             if(dataRank.getRank().equals(RankUnit.VIP)){
