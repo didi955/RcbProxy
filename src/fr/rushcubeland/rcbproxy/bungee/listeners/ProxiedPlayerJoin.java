@@ -24,9 +24,9 @@ public class ProxiedPlayerJoin implements Listener {
         Account account = new Account(player.getUniqueId());
         account.onLogin();
 
-        initRankPlayerPermissions(player, account.getDatarank().getRank());
-
         Friend.joinNotifFriends(player);
+
+        initRankPlayerPermissions(player, account.getDatarank().getRank());
 
     }
 

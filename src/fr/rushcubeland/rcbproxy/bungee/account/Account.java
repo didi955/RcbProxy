@@ -56,7 +56,7 @@ public class Account extends AbstractData {
     }
 
     private String[] getDataOfProxiedPlayerOptionsFromMySQL() {
-        String[] data = new String[4];
+        String[] data = new String[5];
 
         try {
             MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT * FROM Proxyplayer_options WHERE uuid='%s'", getUUID()), rs -> {
@@ -66,6 +66,7 @@ public class Account extends AbstractData {
                         data[1] = rs.getString("state_friend_requests");
                         data[2] = rs.getString("state_chat");
                         data[3] = rs.getString("state_friends_statut_notif");
+                        data[4] = rs.getString("state_private_msg");
                     }
                     else
                     {
@@ -200,8 +201,8 @@ public class Account extends AbstractData {
     private void sendDataOfProxiedPlayerOptionsToMysql() {
         if(newPlayer) {
             try {
-                MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Proxyplayer_options (uuid, state_party_invite, state_friend_requests, state_chat, state_friends_statut_notif) VALUES ('%s', '%s', '%s', '%s', '%s')",
-                        getUUID(), dataOptions.getStatePartyInvite().getName(), dataOptions.getStateFriendRequests().getName(), dataOptions.getStateChat().getName(), dataOptions.getStateFriendsStatutNotif().getName()));
+                MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Proxyplayer_options (uuid, state_party_invite, state_friend_requests, state_chat, state_friends_statut_notif, state_private_msg) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+                        getUUID(), dataOptions.getStatePartyInvite().getName(), dataOptions.getStateFriendRequests().getName(), dataOptions.getStateChat().getName(), dataOptions.getStateFriendsStatutNotif().getName(), dataOptions.getStateMP().getName()));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -209,15 +210,14 @@ public class Account extends AbstractData {
         else
         {
             try {
-                MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("UPDATE Proxyplayer_options SET state_party_invite='%s', state_friend_requests='%s', state_chat='%s', state_friends_statut_notif='%s' WHERE uuid='%s'",
-                        dataOptions.getStatePartyInvite().getName(), dataOptions.getStateFriendRequests().getName(), dataOptions.getStateChat().getName(), dataOptions.getStateFriendsStatutNotif().getName(), getUUID()));
+                MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("UPDATE Proxyplayer_options SET state_party_invite='%s', state_friend_requests='%s', state_chat='%s', state_friends_statut_notif='%s', state_private_msg='%s' WHERE uuid='%s'",
+                        dataOptions.getStatePartyInvite().getName(), dataOptions.getStateFriendRequests().getName(), dataOptions.getStateChat().getName(), dataOptions.getStateFriendsStatutNotif().getName(), dataOptions.getStateMP().getName(), getUUID()));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
     }
-
-
+    
     private void sendDataOfProxiedPlayerPermissionsToMySQL(){
         for(String perms : dataPermissions.getPermissions()){
 
@@ -257,6 +257,17 @@ public class Account extends AbstractData {
             dataOptions.setStateFriendRequests(OptionUnit.OPEN);
             dataOptions.setStatePartyInvite(OptionUnit.OPEN);
             dataOptions.setStateFriendsStatutNotif(OptionUnit.OPEN);
+            dataOptions.setStateMP(OptionUnit.OPEN);
+
+            ProxyServer.getInstance().getScheduler().schedule(RcbProxy.getInstance(), () -> {
+                if(getPlayer().getServer() != null){
+                    BungeeSend.sendUpdatePartyInviteState(getPlayer(), OptionUnit.OPEN);
+                    BungeeSend.sendUpdateFriendRequestsState(getPlayer(), OptionUnit.OPEN);
+                    BungeeSend.sendUpdateChatState(getPlayer(), OptionUnit.OPEN);
+                    BungeeSend.sendUpdateFriendsStatutNotifState(getPlayer(), OptionUnit.OPEN);
+                    BungeeSend.sendUpdateMPState(getPlayer(), OptionUnit.OPEN);
+                }
+            }, 5L, TimeUnit.SECONDS);
         }
         else {
             dataRank.setRank(RankUnit.getByName(data[0]), Long.parseLong(data[1]));
@@ -268,6 +279,7 @@ public class Account extends AbstractData {
             dataOptions.setStateFriendRequests(OptionUnit.getByName(dataPlayerOptions[1]));
             dataOptions.setStateChat(OptionUnit.getByName(dataPlayerOptions[2]));
             dataOptions.setStateFriendsStatutNotif(OptionUnit.getByName(dataPlayerOptions[3]));
+            dataOptions.setStateMP(OptionUnit.getByName(dataPlayerOptions[4]));
             if(dataRank.getRank().equals(RankUnit.VIP)){
                 dataFriends.setMaxFriends(30);
             }
@@ -279,6 +291,11 @@ public class Account extends AbstractData {
             }
             ProxyServer.getInstance().getScheduler().schedule(RcbProxy.getInstance(), () -> {
                 if(getPlayer().getServer() != null){
+                    BungeeSend.sendUpdatePartyInviteState(getPlayer(), OptionUnit.getByName(dataPlayerOptions[0]));
+                    BungeeSend.sendUpdateFriendRequestsState(getPlayer(), OptionUnit.getByName(dataPlayerOptions[1]));
+                    BungeeSend.sendUpdateChatState(getPlayer(), OptionUnit.getByName(dataPlayerOptions[2]));
+                    BungeeSend.sendUpdateFriendsStatutNotifState(getPlayer(), OptionUnit.getByName(dataPlayerOptions[3]));
+                    BungeeSend.sendUpdateMPState(getPlayer(), OptionUnit.getByName(dataPlayerOptions[4]));
                     for(String friends : dataPlayerFriends){
                         dataFriends.addFriend(friends);
                         BungeeSend.sendFriendsDataAdd(getPlayer(), friends);

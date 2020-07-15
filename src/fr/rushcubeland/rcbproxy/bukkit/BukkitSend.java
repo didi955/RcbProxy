@@ -50,4 +50,70 @@ public class BukkitSend {
         }
     }
 
+    public static void StatePartyInviteToProxy(Player player, String state){
+        try {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("StatePartyInvite");
+            out.writeUTF(player.getName());
+            out.writeUTF(state);
+            player.sendPluginMessage(RcbProxy.getInstance(), "rcbproxy:main", out.toByteArray());
+        }
+        catch (NullPointerException nullPointerException){
+            nullPointerException.getStackTrace();
+        }
+    }
+
+    public static void StateFriendRequestsToProxy(Player player, String state){
+        try {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("StateFriendRequests");
+            out.writeUTF(player.getName());
+            out.writeUTF(state);
+            player.sendPluginMessage(RcbProxy.getInstance(), "rcbproxy:main", out.toByteArray());
+        }
+        catch (NullPointerException nullPointerException){
+            nullPointerException.getStackTrace();
+        }
+    }
+
+    public static void StateChatToProxy(Player player, String state){
+        try {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("StateChat");
+            out.writeUTF(player.getName());
+            out.writeUTF(state);
+            player.sendPluginMessage(RcbProxy.getInstance(), "rcbproxy:main", out.toByteArray());
+        }
+        catch (NullPointerException nullPointerException){
+            nullPointerException.getStackTrace();
+        }
+    }
+
+    public static void StateFriendsStatutNotifToProxy(Player player, String state){
+        try {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("StateFriendsStatutNotif");
+            out.writeUTF(player.getName());
+            out.writeUTF(state);
+            player.sendPluginMessage(RcbProxy.getInstance(), "rcbproxy:main", out.toByteArray());
+        }
+        catch (NullPointerException nullPointerException){
+            nullPointerException.getStackTrace();
+        }
+    }
+
+    public static void StateMPToProxy(Player player, String state){
+        try {
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("StateMP");
+            out.writeUTF(player.getName());
+            out.writeUTF(state);
+            player.sendPluginMessage(RcbProxy.getInstance(), "rcbproxy:main", out.toByteArray());
+        }
+        catch (NullPointerException nullPointerException){
+            nullPointerException.getStackTrace();
+        }
+    }
+
+
 }

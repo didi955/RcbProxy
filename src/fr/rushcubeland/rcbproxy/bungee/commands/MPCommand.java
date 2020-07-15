@@ -2,6 +2,7 @@ package fr.rushcubeland.rcbproxy.bungee.commands;
 
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.account.Account;
+import fr.rushcubeland.rcbproxy.bungee.options.OptionUnit;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -46,6 +47,14 @@ public class MPCommand extends Command {
                         Optional<Account> account = RcbProxy.getInstance().getAccount(player);
                         Optional<Account> account1 = RcbProxy.getInstance().getAccount(receiver);
                         if(account.isPresent() && account1.isPresent()){
+                            if(account1.get().getDataOptions().getStateMP().equals(OptionUnit.NEVER)){
+                                player.sendMessage(new TextComponent("§cCe joueur ne souhaite pas recevoir de messages privés !"));
+                                return;
+                            }
+                            else if(account1.get().getDataOptions().getStateMP().equals(OptionUnit.ONLY_FRIENDS) && !account.get().getDataFriends().areFriendWith(receiver.getName())){
+                                player.sendMessage(new TextComponent("§cCe joueur ne souhaite pas recevoir de messages privés !"));
+                                return;
+                            }
                             receiver.sendMessage(new TextComponent(account.get().getDatarank().getRank().getPrefix() + player.getDisplayName() + " §6-> §7Moi: §f" + message));
                             player.sendMessage(new TextComponent("§7Moi §6-> " + account1.get().getDatarank().getRank().getPrefix() + receiver.getDisplayName() + " §7: §f" + message));
                             RcbProxy.getInstance().getMpData().put(player, receiver);

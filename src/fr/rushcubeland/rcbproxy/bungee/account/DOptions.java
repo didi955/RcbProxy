@@ -10,6 +10,7 @@ public class DOptions extends AbstractData {
     private OptionUnit stateFriendRequests;
     private OptionUnit stateChat;
     private OptionUnit stateFriendsStatutNotif;
+    private OptionUnit stateMP;
 
     public DOptions(UUID uuid) {
         this.uuid = uuid;
@@ -19,14 +20,29 @@ public class DOptions extends AbstractData {
         this.statePartyInvite = statePartyInvit;
     }
 
-    public OptionUnit getStateChat() {
-        return stateChat;
-    }
-
     public void setStateChat(OptionUnit stateChat) {
         this.stateChat = stateChat;
     }
 
+    public void setStateFriendRequests(OptionUnit stateFriendRequests) {
+        this.stateFriendRequests = stateFriendRequests;
+    }
+
+    public void setStateFriendsStatutNotif(OptionUnit stateFriendsStatutNotif) {
+        this.stateFriendsStatutNotif = stateFriendsStatutNotif;
+    }
+
+    public void setStateMP(OptionUnit stateMP) {
+        this.stateMP = stateMP;
+    }
+
+    public OptionUnit getStateMP() {
+        return stateMP;
+    }
+
+    public OptionUnit getStateFriendsStatutNotif() {
+        return stateFriendsStatutNotif;
+    }
     public OptionUnit getStatePartyInvite() {
         return statePartyInvite;
     }
@@ -35,15 +51,8 @@ public class DOptions extends AbstractData {
         return stateFriendRequests;
     }
 
-    public void setStateFriendRequests(OptionUnit stateFriendRequests) {
-        this.stateFriendRequests = stateFriendRequests;
+    public OptionUnit getStateChat() {
+        return stateChat;
     }
 
-    public OptionUnit getStateFriendsStatutNotif() {
-        return stateFriendsStatutNotif;
-    }
-
-    public void setStateFriendsStatutNotif(OptionUnit stateFriendsStatutNotif) {
-        this.stateFriendsStatutNotif = stateFriendsStatutNotif;
-    }
 }

@@ -2,6 +2,7 @@ package fr.rushcubeland.rcbproxy.bukkit;
 
 import fr.rushcubeland.rcbproxy.bukkit.friends.FriendsGUI;
 import fr.rushcubeland.rcbproxy.bukkit.mod.ModModerator;
+import fr.rushcubeland.rcbproxy.bukkit.options.Options;
 import fr.rushcubeland.rcbproxy.bukkit.sanction.MuteData;
 import fr.rushcubeland.rcbproxy.bukkit.sanction.SanctionGUI;
 import org.bukkit.Bukkit;
@@ -100,6 +101,48 @@ public class BukkitReceive implements PluginMessageListener, Listener {
                 FriendsGUI.openFriendsGUI(player1);
             }
         }
+        if(action.equalsIgnoreCase("OptionsGUI")){
+            Player player1 = Bukkit.getPlayer(received.get(0));
+            if(player1 != null){
+                Options.openOptionsInv(player1);
+            }
+        }
+        if(action.equalsIgnoreCase("UpdateChatState")){
+            Player player1 = Bukkit.getPlayer(received.get(0));
+            String state = received.get(1);
+            if(player1 != null){
+                Options.updateDataStateChat(player1, state);
+            }
+        }
+        if(action.equalsIgnoreCase("UpdatePartyInviteState")){
+            Player player1 = Bukkit.getPlayer(received.get(0));
+            String state = received.get(1);
+            if(player1 != null){
+                Options.updateDataStatePartyInvite(player1, state);
+            }
+        }
+        if(action.equalsIgnoreCase("UpdateFriendRequestsState")){
+            Player player1 = Bukkit.getPlayer(received.get(0));
+            String state = received.get(1);
+            if(player1 != null){
+                Options.updateDataStateFriendRequests(player1, state);
+            }
+        }
+        if(action.equalsIgnoreCase("UpdateFriendsStatutNotifState")){
+            Player player1 = Bukkit.getPlayer(received.get(0));
+            String state = received.get(1);
+            if(player1 != null){
+                Options.updateDataStateFriendsStatutNotif(player1, state);
+            }
+        }
+        if(action.equalsIgnoreCase("UpdateMPState")){
+            Player player1 = Bukkit.getPlayer(received.get(0));
+            String state = received.get(1);
+            if(player1 != null){
+                Options.updateDataStateMP(player1, state);
+            }
+        }
+
     }
 
 

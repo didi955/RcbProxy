@@ -185,7 +185,8 @@ public class Friend {
                 }
                 else
                 {
-                    sender.sendMessage(new TextComponent("§d[Amis] §cCe joueur ne souhaite pas recevoir des requêtes d'amis !"));
+                    sender.sendMessage(new TextComponent("§d[Amis] §cCe joueur ne souhaite pas recevoir des requêtes"));
+                    sender.sendMessage(new TextComponent("§fd'amis !"));
                 }
             }
             else

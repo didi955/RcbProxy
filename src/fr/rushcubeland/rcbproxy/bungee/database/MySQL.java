@@ -78,7 +78,8 @@ public class MySQL {
                     "state_party_invite VARCHAR(16), " +
                     "state_friend_requests VARCHAR(16), " +
                     "state_chat VARCHAR(16), " +
-                    "state_friends_statut_notif VARCHAR(16))");
+                    "state_friends_statut_notif VARCHAR(16), " +
+                    "state_private_msg VARCHAR(16))");
 
         } catch (SQLException e) {
             e.printStackTrace();

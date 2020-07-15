@@ -104,13 +104,10 @@ public class RcbProxy extends Plugin {
             ProxyServer.getInstance().getPluginManager()
                     .registerCommand(this, new PartyCommand(cmd));
         }
-        /*
-        for(String cmd : SlotsCommand.getCmds()){
+        for(String cmd : OptionsCommand.getCmds()){
             ProxyServer.getInstance().getPluginManager()
-                    .registerCommand(this, new SlotsCommand(cmd));
+                    .registerCommand(this, new OptionsCommand(cmd));
         }
-
-         */
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new BanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new UnbanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new WhoisCommand());
