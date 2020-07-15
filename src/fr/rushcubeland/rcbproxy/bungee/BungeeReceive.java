@@ -30,7 +30,8 @@ public class BungeeReceive implements Listener {
             String uuid = in.readUTF();
             long durationSeconds = in.readLong();
             String reason = in.readUTF();
-            RcbProxy.getInstance().getBanManager().ban(UUID.fromString(uuid), durationSeconds, reason);
+            String modName = in.readUTF();
+            RcbProxy.getInstance().getBanManager().ban(UUID.fromString(uuid), durationSeconds, reason, modName);
 
         }
         if(subChannel.equalsIgnoreCase("Mute")){

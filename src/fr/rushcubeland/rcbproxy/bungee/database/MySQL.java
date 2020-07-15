@@ -58,7 +58,8 @@ public class MySQL {
                     "uuid VARCHAR(255), " +
                     "start BIGINT , " +
                     "end BIGINT, " +
-                    "reason VARCHAR(64))");
+                    "reason VARCHAR(64), " +
+                    "moderator VARCHAR(32))");
 
             update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "CREATE TABLE IF NOT EXISTS Proxymute (" +
                     "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +

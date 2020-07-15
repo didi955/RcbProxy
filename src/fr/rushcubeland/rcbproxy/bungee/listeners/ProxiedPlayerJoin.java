@@ -36,7 +36,7 @@ public class ProxiedPlayerJoin implements Listener {
 
         if(RcbProxy.getInstance().getBanManager().isBanned(e.getConnection().getUniqueId())) {
             e.setCancelled(true);
-            e.setCancelReason(new TextComponent("§cVous avez été banni !\n \n §6Raison : §f" +
+            e.setCancelReason(new TextComponent("§cVous avez été banni !\n \n §ePar: §b" + RcbProxy.getInstance().getBanManager().getModerator(e.getConnection().getUniqueId()) + " \n \n§eRaison : §f" +
                     RcbProxy.getInstance().getBanManager().getReason(e.getConnection().getUniqueId()) + "\n \n §aTemps restant : §f" +
                     RcbProxy.getInstance().getBanManager().getTimeLeft(e.getConnection().getUniqueId())));
         }

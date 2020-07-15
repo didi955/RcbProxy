@@ -21,19 +21,19 @@ public class BanManager {
     private ArrayList<String> uuidbansbdd = new ArrayList<>();
 
 
-    public void ban(UUID uuid, long durationSeconds, String reason){
+    public void ban(UUID uuid, long durationSeconds, String reason, String modName){
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis()+(durationSeconds*1000);
         if (durationSeconds == -1L) {
             end = -1L;
         }
-        String[] data = {String.valueOf(start), String.valueOf(end), reason};
+        String[] data = {String.valueOf(start), String.valueOf(end), reason, modName};
         this.databan.put(uuid.toString(), data);
 
         if(ProxyServer.getInstance().getPlayer(uuid) != null) {
             ProxiedPlayer target = ProxyServer.getInstance().getPlayer(uuid);
             ProxyServer.getInstance().broadcast(new TextComponent("§6Le joueur §e" + target.getName() + " §6a été §cbanni §6pour §e" + reason));
-            target.disconnect(new TextComponent("§6Vous avez été §cbanni !\n \n §eRaison : §f" + reason + "\n \n §aTemps restant : §f" +
+            target.disconnect(new TextComponent("§cVous avez été banni !\n \n §ePar: §b" + modName + " \n \n§eRaison : §f" + reason + "\n \n §aTemps restant : §f" +
                     getTimeLeft(uuid)));
         }
         else
@@ -60,6 +60,14 @@ public class BanManager {
             return Long.parseLong(data[1]);
         }
         return 0L;
+    }
+
+    public String getModerator(UUID uuid){
+        if(isBanned(uuid)){
+            String[] data = this.databan.get(uuid.toString());
+            return String.valueOf(data[3]);
+        }
+        return null;
     }
 
     public void unban(UUID uuid){
@@ -179,7 +187,8 @@ public class BanManager {
                             long start = Long.parseLong(rs.getString("start"));
                             long end = Long.parseLong(rs.getString("end"));
                             String reason = rs.getString("reason");
-                            String[] data = {String.valueOf(start), String.valueOf(end), String.valueOf(reason)};
+                            String modName = rs.getString("moderator");
+                            String[] data = {String.valueOf(start), String.valueOf(end), String.valueOf(reason), String.valueOf(modName)};
                             Mapdata.put(uuid, data);
                         }
                     } catch (SQLException exception) {
@@ -211,6 +220,7 @@ public class BanManager {
             long start = Long.parseLong(data[0]);
             long end = Long.parseLong(data[1]);
             String reason = data[2];
+            String modName = data[3];
 
             try {
                 MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT * FROM Proxyban WHERE uuid='%s'", uuid
@@ -218,8 +228,8 @@ public class BanManager {
                     try {
                         if(rs.next()){
                             try {
-                                MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("UPDATE Proxyban SET start='%s', end='%s', reason='%s' WHERE uuid='%s'",
-                                        start, end, reason, uuid));
+                                MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("UPDATE Proxyban SET start='%s', end='%s', reason='%s', moderator='%s' WHERE uuid='%s'",
+                                        start, end, reason, modName, uuid));
 
                             } catch (SQLException exception) {
                                 exception.printStackTrace();
@@ -228,8 +238,8 @@ public class BanManager {
                         else
                         {
                             try {
-                                MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Proxyban (uuid, start, end, reason) VALUES ('%s', '%s', '%s', '%s')",
-                                        uuid, start, end, reason));
+                                MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Proxyban (uuid, start, end, reason, moderator) VALUES ('%s', '%s', '%s', '%s', '%s')",
+                                        uuid, start, end, reason, modName));
                             } catch (SQLException exception) {
                                 exception.printStackTrace();
                             }

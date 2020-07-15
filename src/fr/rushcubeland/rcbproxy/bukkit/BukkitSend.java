@@ -15,6 +15,7 @@ public class BukkitSend {
             out.writeUTF(uuid);
             out.writeLong(durationSeconds);
             out.writeUTF(reason);
+            out.writeUTF(player.getName());
             player.sendPluginMessage(RcbProxy.getInstance(), "rcbproxy:main", out.toByteArray());
         }
         catch (NullPointerException nullPointerException){
