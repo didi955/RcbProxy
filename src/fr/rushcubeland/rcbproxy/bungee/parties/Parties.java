@@ -193,7 +193,8 @@ public class Parties {
                 }
             }
             else if(account2.get().getDataOptions().getStatePartyInvite().equals(OptionUnit.NEVER)){
-                sender.sendMessage(new TextComponent("§d[Groupe] §cCe joueur ne souhaite pas recevoir d'invitations de groupe !"));
+                sender.sendMessage(new TextComponent("§d[Groupe] §cCe joueur ne souhaite pas recevoir d'invitations de"));
+                sender.sendMessage(new TextComponent("§cgroupe !"));
             }
             else if(account2.get().getDataOptions().getStatePartyInvite().equals(OptionUnit.OPEN)){
                 Party party = new Party(5);

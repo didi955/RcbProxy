@@ -156,7 +156,6 @@ public class ClickEvent implements Listener {
                         return;
                     }
                 }
-
             }
             if(SanctionGUI.getCurrentSanctionForATarget().containsKey(player)){
                 sanction = SanctionGUI.getCurrentSanctionForATarget().get(player);

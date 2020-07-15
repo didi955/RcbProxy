@@ -38,7 +38,7 @@ public class FriendCommand extends Command {
                 else
                 {
                     infos(player);
-                    player.sendMessage(new TextComponent("§d[Amis] §cVeuillez spécifier un joueur !"));
+                    player.sendMessage(new TextComponent("§d[Amis] §cVeuillez spécifier un argument valide !"));
                 }
             }
             else
