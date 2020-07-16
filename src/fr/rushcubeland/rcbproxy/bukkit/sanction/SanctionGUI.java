@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 
@@ -38,7 +39,9 @@ public class SanctionGUI {
         inv.setItem(2, msg);
 
         ItemStack gameplay = new ItemBuilder(Material.IRON_SWORD).setName("§6Gameplay").setLore("§fSanction liée au §bcomportement" , "§bin-game §f(Triche, anti-jeu...)", "§c", "§a> §fClic gauche pour ouvrir").toItemStack();
-        gameplay.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        ItemMeta gameplayItemMeta = gameplay.getItemMeta();
+        gameplayItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        gameplay.setItemMeta(gameplayItemMeta);
         inv.setItem(3, gameplay);
 
         ItemStack triche = new ItemBuilder(Material.ENCHANTED_GOLDEN_APPLE).setName("§6Triche").setLore("§fSanction liée à l'utilisation d'un" , "§bmode de triche", "§c", "§a> §fClic gauche pour ouvrir").toItemStack();
@@ -65,7 +68,9 @@ public class SanctionGUI {
         inv.setItem(9, troll);
 
         ItemStack report = new ItemBuilder(Material.DIAMOND_AXE).setName("§6Abus de report").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
-        report.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        ItemMeta reportItemMeta = report.getItemMeta();
+        reportItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        report.setItemMeta(reportItemMeta);
         inv.setItem(10, report);
 
         ItemStack quit = new ItemBuilder(Material.ACACIA_DOOR).setName("§cRetour").toItemStack();
@@ -95,7 +100,9 @@ public class SanctionGUI {
         inv.setItem(11, formatIncorrect);
 
         ItemStack ventard = new ItemBuilder(Material.GOLDEN_SWORD).setName("§6Ventardise").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
-        ventard.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        ItemMeta  ventardItemMeta = ventard.getItemMeta();
+        ventardItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        ventard.setItemMeta(ventardItemMeta);
         inv.setItem(12, ventard);
 
         ItemStack flood = new ItemBuilder(Material.TNT).setName("§6Flood/Spam").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
@@ -155,7 +162,9 @@ public class SanctionGUI {
         inv.setItem(11, fastplace);
 
         ItemStack macro = new ItemBuilder(Material.DIAMOND_SHOVEL).setName("§6Macro").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
-        macro.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        ItemMeta macroItemMeta = macro.getItemMeta();
+        macroItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        macro.setItemMeta(macroItemMeta);
         inv.setItem(12, macro);
 
         ItemStack reach = new ItemBuilder(Material.BOW).setName("§6Reach").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
@@ -181,12 +190,18 @@ public class SanctionGUI {
         inv.setItem(0, headp);
 
         ItemStack gameplay = new ItemBuilder(Material.IRON_SWORD).setName("§6Gameplay").setLore("§fSanction liée au §bcomportement" , "§bin-game §f(Triche, anti-jeu...)", "§c", "§a> §fClic gauche pour ouvrir").toItemStack();
+        ItemMeta gameplayItemMeta = gameplay.getItemMeta();
+        gameplayItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        gameplay.setItemMeta(gameplayItemMeta);
         inv.setItem(2, gameplay);
 
         ItemStack ally = new ItemBuilder(Material.TROPICAL_FISH).setName("§6Alliance en jeu interdite").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
         inv.setItem(9, ally);
 
         ItemStack skinincorect = new ItemBuilder(Material.LEATHER_CHESTPLATE).setName("§6Skin incorrect").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        ItemMeta skinincorectItemMeta = skinincorect.getItemMeta();
+        skinincorectItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        skinincorect.setItemMeta(skinincorectItemMeta);
         inv.setItem(10, skinincorect);
 
         ItemStack antijeu = new ItemBuilder(Material.FLINT_AND_STEEL).setName("§6Anti-jeu").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
