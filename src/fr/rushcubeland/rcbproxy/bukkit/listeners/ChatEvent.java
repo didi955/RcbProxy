@@ -19,10 +19,11 @@ public class ChatEvent implements Listener {
             if(!e.getMessage().startsWith("/")){
                 e.setCancelled(true);
                 e.getPlayer().sendMessage("§cVous avez été mute !");
+                return;
             }
         }
         for(Player pls : Bukkit.getOnlinePlayers()){
-            if(!Options.hasChatActivated(e.getPlayer())){
+            if(!Options.hasChatActivated(pls)){
                 e.getRecipients().remove(pls);
             }
             else e.getRecipients().add(pls);
