@@ -23,7 +23,7 @@ public class Options {
     public static boolean hasChatActivated(Player player){
         if(dataStateChat.containsKey(player)){
             String option = dataStateChat.get(player);
-            return option.equalsIgnoreCase("NEVER");
+            return option.equalsIgnoreCase("OPEN");
         }
         return false;
     }
