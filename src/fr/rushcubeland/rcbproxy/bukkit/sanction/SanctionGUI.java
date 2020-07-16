@@ -5,14 +5,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
 public class SanctionGUI {
 
-    private static HashMap<Player, String> ModAndTarget = new HashMap<>();
-    private static HashMap<Player, SanctionUnit> CurrentSanctionForATarget = new HashMap<>();
+    private static final HashMap<Player, String> ModAndTarget = new HashMap<>();
+    private static final HashMap<Player, SanctionUnit> CurrentSanctionForATarget = new HashMap<>();
 
     public static HashMap<Player, SanctionUnit> getCurrentSanctionForATarget() {
         return CurrentSanctionForATarget;
@@ -23,9 +24,7 @@ public class SanctionGUI {
     }
 
     public static void removeSanction(Player mod){
-        if(getCurrentSanctionForATarget().containsKey(mod)){
-            getCurrentSanctionForATarget().remove(mod);
-        }
+        getCurrentSanctionForATarget().remove(mod);
     }
 
     public static void openModGui(Player from, String targetname){
@@ -39,6 +38,7 @@ public class SanctionGUI {
         inv.setItem(2, msg);
 
         ItemStack gameplay = new ItemBuilder(Material.IRON_SWORD).setName("§6Gameplay").setLore("§fSanction liée au §bcomportement" , "§bin-game §f(Triche, anti-jeu...)", "§c", "§a> §fClic gauche pour ouvrir").toItemStack();
+        gameplay.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         inv.setItem(3, gameplay);
 
         ItemStack triche = new ItemBuilder(Material.ENCHANTED_GOLDEN_APPLE).setName("§6Triche").setLore("§fSanction liée à l'utilisation d'un" , "§bmode de triche", "§c", "§a> §fClic gauche pour ouvrir").toItemStack();
@@ -65,6 +65,7 @@ public class SanctionGUI {
         inv.setItem(9, troll);
 
         ItemStack report = new ItemBuilder(Material.DIAMOND_AXE).setName("§6Abus de report").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        report.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         inv.setItem(10, report);
 
         ItemStack quit = new ItemBuilder(Material.ACACIA_DOOR).setName("§cRetour").toItemStack();
@@ -84,6 +85,7 @@ public class SanctionGUI {
         inv.setItem(2, msg);
 
         ItemStack msginu = new ItemBuilder(Material.WOODEN_HOE).setName("§6Messages inutile").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        msginu.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         inv.setItem(9, msginu);
 
         ItemStack fakenews = new ItemBuilder(Material.GLASS_BOTTLE).setName("§6Fausse information").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
@@ -93,6 +95,7 @@ public class SanctionGUI {
         inv.setItem(11, formatIncorrect);
 
         ItemStack ventard = new ItemBuilder(Material.GOLDEN_SWORD).setName("§6Ventardise").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        ventard.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         inv.setItem(12, ventard);
 
         ItemStack flood = new ItemBuilder(Material.TNT).setName("§6Flood/Spam").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
@@ -145,12 +148,14 @@ public class SanctionGUI {
         inv.setItem(9, antikb);
 
         ItemStack killaura = new ItemBuilder(Material.IRON_SWORD).setName("§6KillAura/Forcefield").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        killaura.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         inv.setItem(10, killaura);
 
         ItemStack fastplace = new ItemBuilder(Material.CLOCK).setName("§6FastPlace").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
         inv.setItem(11, fastplace);
 
         ItemStack macro = new ItemBuilder(Material.DIAMOND_SHOVEL).setName("§6Macro").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
+        macro.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         inv.setItem(12, macro);
 
         ItemStack reach = new ItemBuilder(Material.BOW).setName("§6Reach").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
