@@ -24,9 +24,14 @@ public class ChatEvent implements Listener {
         }
         for(Player pls : Bukkit.getOnlinePlayers()){
             if(!Options.hasChatActivated(pls)){
-                e.getRecipients().remove(pls);
+                if(pls != e.getPlayer()){
+                    e.getRecipients().remove(pls);
+                }
             }
-            else e.getRecipients().add(pls);
+            else
+            {
+                e.getRecipients().add(pls);
+            }
         }
     }
 }
