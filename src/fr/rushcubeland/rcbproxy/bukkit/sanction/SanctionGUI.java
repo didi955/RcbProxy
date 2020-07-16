@@ -90,7 +90,9 @@ public class SanctionGUI {
         inv.setItem(2, msg);
 
         ItemStack msginu = new ItemBuilder(Material.WOODEN_HOE).setName("§6Messages inutile").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
-        msginu.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        ItemMeta msginuItemMeta = msginu.getItemMeta();
+        msginuItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        msginu.setItemMeta(msginuItemMeta);
         inv.setItem(9, msginu);
 
         ItemStack fakenews = new ItemBuilder(Material.GLASS_BOTTLE).setName("§6Fausse information").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
@@ -155,7 +157,9 @@ public class SanctionGUI {
         inv.setItem(9, antikb);
 
         ItemStack killaura = new ItemBuilder(Material.IRON_SWORD).setName("§6KillAura/Forcefield").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
-        killaura.getItemMeta().addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        ItemMeta killauraItemMeta = killaura.getItemMeta();
+        killauraItemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        killaura.setItemMeta(killauraItemMeta);
         inv.setItem(10, killaura);
 
         ItemStack fastplace = new ItemBuilder(Material.CLOCK).setName("§6FastPlace").setLore("", "§c ", "§a> §fClic gauche pour appliquer").toItemStack();
