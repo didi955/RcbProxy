@@ -1,7 +1,5 @@
 package fr.rushcubeland.rcbproxy.bukkit.network;
 
-import fr.rushcubeland.rcbproxy.bungee.account.RankUnit;
-
 import java.util.Arrays;
 import java.util.Optional;
 

@@ -8,6 +8,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.util.UUID;
+
 public class PunishGUICommand extends Command {
 
     private static String cmd = "ap";
@@ -37,7 +39,6 @@ public class PunishGUICommand extends Command {
                 }
                 BungeeSend.sendGuiPunishment(player, args[0]);
             }
-
         }
     }
 

@@ -1,7 +1,7 @@
 package fr.rushcubeland.rcbproxy.bungee.listeners;
 
+import fr.rushcubeland.commons.AParty;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
-import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import fr.rushcubeland.rcbproxy.bungee.friends.Friend;
 import fr.rushcubeland.rcbproxy.bungee.parties.Parties;
 import fr.rushcubeland.rcbproxy.bungee.parties.Party;
@@ -21,8 +21,6 @@ public class ProxiedPlayerQuit implements Listener {
         removePartyData(player);
         Friend.quitNotifFriends(player);
         Friend.onQuit(player);
-        Optional<Account> account = RcbProxy.getInstance().getAccount(player);
-        account.ifPresent(Account::onLogout);
 
     }
 
@@ -34,17 +32,16 @@ public class ProxiedPlayerQuit implements Listener {
 
     private void removePartyData(ProxiedPlayer player){
         Parties.getDatarequest().remove(player);
-        Optional<Account> account = RcbProxy.getInstance().getAccount(player);
-        if(account.isPresent()){
-            if(account.get().getDataParty().isInParty()){
-                Party party = account.get().getDataParty().getParty();
+        Optional<AParty> aParty = RcbProxy.getInstance().getAccountParty(player);
+        if(aParty.isPresent()){
+            if(aParty.get().isInParty()){
+                Party party = aParty.get().getParty();
                 party.removePlayer(player);
                 if(!party.getPlayers().isEmpty()){
                     party.setCaptain(party.getPlayers().get(0));
                 }
-                account.get().getDataParty().setParty(null);
+                aParty.get().setParty(null);
             }
         }
     }
-
 }

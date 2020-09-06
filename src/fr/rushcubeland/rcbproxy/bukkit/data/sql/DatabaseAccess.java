@@ -1,4 +1,4 @@
-package fr.rushcubeland.rcbproxy.bungee.database;
+package fr.rushcubeland.rcbproxy.bukkit.data.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

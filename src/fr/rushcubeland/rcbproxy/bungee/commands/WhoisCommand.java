@@ -1,15 +1,16 @@
 package fr.rushcubeland.rcbproxy.bungee.commands;
 
+import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
-import fr.rushcubeland.rcbproxy.bungee.account.Account;
+import fr.rushcubeland.rcbproxy.bungee.exceptions.AccountNotFoundException;
 import fr.rushcubeland.rcbproxy.bungee.mod.ModModerator;
+import fr.rushcubeland.rcbproxy.bungee.provider.AccountProvider;
+import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-
-import java.util.Optional;
 
 public class WhoisCommand extends Command {
 
@@ -40,14 +41,25 @@ public class WhoisCommand extends Command {
     }
 
     public void infos(ProxiedPlayer sender, ProxiedPlayer target) {
-        Optional<Account> account = RcbProxy.getInstance().getAccount(target);
-        if(ModModerator.isInModData(target.getUniqueId().toString())){
-            account.ifPresent(value -> sender.sendMessage(new TextComponent("§6[Whois] " + value.getDatarank().getRank().getPrefix() + target.getName() + " §6(MOD) §f:")));
-        }
-        else
-        {
-            account.ifPresent(value -> sender.sendMessage(new TextComponent("§6[Whois] " + value.getDatarank().getRank().getPrefix() + target.getName() + " :")));
-        }
+        BungeeCord.getInstance().getScheduler().runAsync(RcbProxy.getInstance(), () -> {
+
+            try {
+
+                final AccountProvider accountProvider = new AccountProvider(target);
+                final Account account = accountProvider.getAccount();
+
+                if(ModModerator.isInModData(target.getUniqueId().toString())){
+                    sender.sendMessage(new TextComponent("§6[Whois] " + account.getRank().getPrefix() + target.getName() + " §6(MOD) §f:"));
+                }
+                else
+                {
+                    sender.sendMessage(new TextComponent("§6[Whois] " + account.getRank().getPrefix() + target.getName() + " :"));
+                }
+
+            } catch (AccountNotFoundException exception) {
+                System.err.println(exception.getMessage());
+            }
+        });
         String ip = target.getAddress().getHostString();
         int port = target.getAddress().getPort();
         sender.sendMessage(new TextComponent("§fConnexion: §7" + ip + ":" + port));

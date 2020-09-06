@@ -1,7 +1,8 @@
 package fr.rushcubeland.rcbproxy.bungee.parties;
 
+import fr.rushcubeland.commons.AParty;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
-import fr.rushcubeland.rcbproxy.bungee.account.Account;
+import fr.rushcubeland.rcbproxy.bungee.provider.AccountProvider;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.ArrayList;
@@ -19,9 +20,9 @@ public class Party {
 
     public void addPlayer(ProxiedPlayer player){
         if(!this.players.contains(player) && this.players.size() < this.maxPlayers){
-            Optional<Account> account = RcbProxy.getInstance().getAccount(player);
-            if(account.isPresent()){
-                account.get().getDataParty().setParty(this);
+            Optional<AParty> aParty = RcbProxy.getInstance().getAccountParty(player);
+            if(aParty.isPresent()){
+                aParty.get().setParty(this);
                 this.players.add(player);
             }
         }
@@ -29,9 +30,10 @@ public class Party {
 
     public void removePlayer(ProxiedPlayer player){
         if(this.players.contains(player)){
-            Optional<Account> account = RcbProxy.getInstance().getAccount(player);
-            if(account.isPresent()){
-                account.get().getDataParty().setParty(null);
+            final AccountProvider accountProvider = new AccountProvider(player);
+            Optional<AParty> aParty = RcbProxy.getInstance().getAccountParty(player);
+            if(aParty.isPresent()){
+                aParty.get().setParty(null);
                 this.players.remove(player);
             }
         }

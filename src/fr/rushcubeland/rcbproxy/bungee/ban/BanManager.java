@@ -1,7 +1,7 @@
 package fr.rushcubeland.rcbproxy.bungee.ban;
 
-import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
-import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
+import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
+import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
 import fr.rushcubeland.rcbproxy.bungee.utils.TimeUnit;
 import fr.rushcubeland.rcbproxy.bungee.utils.UUIDFetcher;
 import net.md_5.bungee.api.ProxyServer;

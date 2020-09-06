@@ -1,6 +1,9 @@
 package fr.rushcubeland.rcbproxy.bukkit.listeners;
 
-import fr.rushcubeland.rcbproxy.bukkit.options.Options;
+import fr.rushcubeland.commons.AOptions;
+import fr.rushcubeland.rcbproxy.bukkit.RcbProxy;
+import fr.rushcubeland.rcbproxy.bukkit.data.redis.RedisAccess;
+import fr.rushcubeland.commons.options.OptionUnit;
 import fr.rushcubeland.rcbproxy.bukkit.sanction.MuteData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,8 +11,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import java.util.Optional;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 
 public class ChatEvent implements Listener {
 
@@ -23,15 +26,17 @@ public class ChatEvent implements Listener {
             }
         }
         for(Player pls : Bukkit.getOnlinePlayers()){
-            if(!Options.hasChatActivated(pls)){
-                if(pls != e.getPlayer()){
-                    e.getRecipients().remove(pls);
+            RcbProxy.getInstance().getAccountOptionsCallback(pls, aOptions -> {
+                if(!aOptions.getStateChat().equals(OptionUnit.OPEN)){
+                    if(pls != e.getPlayer()){
+                        e.getRecipients().remove(pls);
+                    }
                 }
-            }
-            else
-            {
-                e.getRecipients().add(pls);
-            }
+                else
+                {
+                    e.getRecipients().add(pls);
+                }
+            });
         }
     }
 }

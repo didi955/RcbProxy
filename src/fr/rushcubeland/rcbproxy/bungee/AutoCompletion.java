@@ -1,6 +1,6 @@
 package fr.rushcubeland.rcbproxy.bungee;
 
-import fr.rushcubeland.rcbproxy.bungee.account.Account;
+import fr.rushcubeland.commons.AParty;
 import fr.rushcubeland.rcbproxy.bungee.commands.*;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -209,7 +209,7 @@ public class AutoCompletion implements Listener {
                 if(FriendCommand.getCmds().contains(args[0].replaceAll("/", "")) && e
                 .getCursor().contains(" ")){
 
-                    ProxiedPlayer p = (ProxiedPlayer)e.getSender();
+                    ProxiedPlayer p = (ProxiedPlayer) e.getSender();
 
                     e.getSuggestions().clear();
 
@@ -225,14 +225,6 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                     if(args.length == 2){
-                        if(args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("rm") || args[1].equalsIgnoreCase("del") || args[1].equalsIgnoreCase("delete")){
-                            Optional<Account> account = RcbProxy.getInstance().getAccount(p);
-                            if(account.isPresent()){
-                                for(String friend : account.get().getDataFriends().getFriends()){
-                                    e.getSuggestions().add(friend);
-                                }
-                            }
-                        }
                         if(args[1].equalsIgnoreCase("add")){
                             for (ProxiedPlayer all : ProxyServer.getInstance().getPlayers()) {
                                 e.getSuggestions().add(all.getName());
@@ -265,10 +257,10 @@ public class AutoCompletion implements Listener {
                     }
                     if(args.length == 2){
                         if(args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("rm") || args[1].equalsIgnoreCase("del") || args[1].equalsIgnoreCase("delete")){
-                            Optional<Account> account = RcbProxy.getInstance().getAccount(p);
-                            if(account.isPresent()){
-                                if(account.get().getDataParty().isInParty()){
-                                    for(ProxiedPlayer pls : account.get().getDataParty().getParty().getPlayers()){
+                            final Optional<AParty> aParty = RcbProxy.getInstance().getAccountParty(p);
+                            if(aParty.isPresent()){
+                                if(aParty.get().isInParty()){
+                                    for(ProxiedPlayer pls : aParty.get().getParty().getPlayers()){
                                         e.getSuggestions().add(pls.getDisplayName());
                                     }
                                 }

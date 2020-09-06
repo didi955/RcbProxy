@@ -1,7 +1,8 @@
 package fr.rushcubeland.rcbproxy.bungee.commands;
 
+import fr.rushcubeland.commons.AParty;
+import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
-import fr.rushcubeland.rcbproxy.bungee.account.Account;
 import fr.rushcubeland.rcbproxy.bungee.parties.Parties;
 import fr.rushcubeland.rcbproxy.bungee.parties.Party;
 import net.md_5.bungee.api.CommandSender;
@@ -16,7 +17,6 @@ import java.util.Optional;
 
 public class PartyCommand extends Command {
 
-
     private static final List<String> cmds = Arrays.asList("group", "party", "p", "g");
 
     public PartyCommand(String name) {
@@ -27,7 +27,7 @@ public class PartyCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
         if(sender instanceof ProxiedPlayer){
             ProxiedPlayer player = (ProxiedPlayer) sender;
-            Optional<Account> account = RcbProxy.getInstance().getAccount(player);
+            Optional<AParty> aParty = RcbProxy.getInstance().getAccountParty(player);
 
             if(args.length == 0){
                 infos(player);
@@ -35,9 +35,9 @@ public class PartyCommand extends Command {
             }
             if(args.length == 1){
                 if(args[0].equalsIgnoreCase("list")){
-                    if(account.isPresent()){
-                        if(account.get().getDataParty().isInParty()){
-                            Party party = account.get().getDataParty().getParty();
+                    if(aParty.isPresent()){
+                        if(aParty.get().isInParty()){
+                            Party party = aParty.get().getParty();
                             player.sendMessage(new TextComponent("§e---------§d[Groupe]§e---------"));
                             for(ProxiedPlayer pls : party.getPlayers()){
                                 if(party.getCaptain() == pls){
@@ -56,35 +56,29 @@ public class PartyCommand extends Command {
                             return;
                         }
                     }
-                    else
-                    {
-                        player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                        player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
-                        return;
-                    }
                 }
                 if(args[0].equalsIgnoreCase("leave") || args[0].equalsIgnoreCase("quit")){
-                    if(account.get().getDataParty().isInParty()){
-                        Parties.leave(player);
-                    }
-                    else
-                    {
-                        player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                        player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
-                        return;
+                    if(aParty.isPresent()){
+                        if(aParty.get().isInParty()){
+                            Parties.leave(player);
+                        }
+                        else
+                        {
+                            player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
+                            player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
+                            return;
+                        }
                     }
                 }
                 if(args[0].equalsIgnoreCase("disband")){
-                    if(account.isPresent()){
-                        Party party = account.get().getDataParty().getParty();
+                    if(aParty.isPresent()){
+                        Party party = aParty.get().getParty();
                         if(party.getCaptain() == player){
                             for(ProxiedPlayer pls : party.getPlayers()){
-                                Optional<Account> a = RcbProxy.getInstance().getAccount(pls);
+                                Optional<AParty> a = RcbProxy.getInstance().getAccountParty(pls);
                                 pls.sendMessage(new TextComponent("§d[Groupe] §cVotre groupe a été dissout par §b" + player.getDisplayName() + " §7[Capitaine]"));
-                                if(a.isPresent()){
-                                    a.get().getDataParty().setParty(null);
-                                    party.disbandParty();
-                                }
+                                a.get().setParty(null);
+                                party.disbandParty();
                             }
                             player.sendMessage(new TextComponent("§d[Groupe] §cVous avez dissous le groupe !"));
                         }
@@ -94,13 +88,6 @@ public class PartyCommand extends Command {
                             player.sendMessage(new TextComponent("§cn'etant pas capitaine !"));
                         }
                     }
-                    else
-                    {
-                        player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                        player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
-                        return;
-                    }
-
                 }
                 if(args[0].equalsIgnoreCase("lead") || args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("rm") || args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("accept") || args[0].equalsIgnoreCase("deny")){
                     player.sendMessage(new TextComponent("§d[Groupe] §cVeuillez spécifier un joueur !"));
@@ -109,11 +96,11 @@ public class PartyCommand extends Command {
             }
             if(args.length == 2){
                 ProxiedPlayer target = ProxyServer.getInstance().getPlayer(args[1]);
-                Optional<Account> account2 = RcbProxy.getInstance().getAccount(target);
+                Optional<AParty> aParty2 = RcbProxy.getInstance().getAccountParty(target);
                 if(target != null){
                     if(args[0].equalsIgnoreCase("add")){
-                        if(account.isPresent()){
-                            if(account.get().getDataParty().isInParty()){
+                        if(aParty.isPresent()){
+                            if(aParty.get().isInParty()){
                                 Parties.sendRequest(player, target);
                             }
                             else
@@ -124,17 +111,11 @@ public class PartyCommand extends Command {
                                 return;
                             }
                         }
-                        else
-                        {
-                            player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                            player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
-                            return;
-                        }
                     }
                     if(args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("rm") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("dl")){
-                        if(account.isPresent()){
-                            if(account.get().getDataParty().isInParty()){
-                                if(account.get().getDataParty().getParty().getCaptain() == player){
+                        if(aParty.isPresent()){
+                            if(aParty.get().isInParty()){
+                                if(aParty.get().getParty().getCaptain() == player){
                                     Parties.removeMember(player, target);
                                 }
                                 else
@@ -149,91 +130,58 @@ public class PartyCommand extends Command {
                                 return;
                             }
                         }
-                        else
-                        {
-                            player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                            player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
-                            return;
-                        }
                     }
                     if(args[0].equalsIgnoreCase("accept")){
-                        if(account2.isPresent()){
-                            if(account2.get().getDataParty().isInParty()){
-                                Parties.acceptRequest(target, player, account2.get().getDataParty().getParty());
+                        if(aParty2.isPresent()){
+                            if(aParty2.get().isInParty()){
+                                Parties.acceptRequest(target, player, aParty2.get().getParty());
                             }
                             else
                             {
                                 player.sendMessage(new TextComponent("§d[Groupe] §cCe joueur n'est plus dans une partie !"));
                             }
-                        }
-                        else
-                        {
-                            player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                            player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
-                            return;
                         }
                     }
                     if(args[0].equalsIgnoreCase("deny")){
-                        if(account2.isPresent()){
-                            if(account2.get().getDataParty().isInParty()){
-                                Parties.denyRequest(target, player, account2.get().getDataParty().getParty());
+                        if(aParty2.isPresent()){
+                            if(aParty2.get().isInParty()){
+                                Parties.denyRequest(target, player, aParty2.get().getParty());
                             }
                             else
                             {
                                 player.sendMessage(new TextComponent("§d[Groupe] §cCe joueur n'est plus dans une partie !"));
                             }
                         }
-                        else
-                        {
-                            player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                            player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
-                            return;
-                        }
-
                     }
                     if(args[0].equalsIgnoreCase("lead")){
-                        if(account.isPresent()){
-                            if(account.get().getDataParty().isInParty()){
-                                Party party = account.get().getDataParty().getParty();
-                                if(account2.isPresent()){
-                                    if(party.equals(account2.get().getDataParty().getParty())){
-                                        if(party.getCaptain().equals(player)){
-                                            party.setCaptain(target);
-                                            for(ProxiedPlayer pls : party.getPlayers()){
-                                                pls.sendMessage(new TextComponent("§d[Groupe] §b" + player.getDisplayName() + " §aa transmis le lead à §e" + target.getDisplayName()));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            player.sendMessage(new TextComponent("§d[Groupe] §cSeul le capitaine du groupe peut transmettre le lead à un membre !"));
-                                            return;
+                        if(aParty.isPresent() && aParty2.isPresent()){
+                            if(aParty.get().isInParty()){
+                                Party party = aParty.get().getParty();
+                                if(party.equals(aParty2.get().getParty())){
+                                    if(party.getCaptain().equals(player)){
+                                        party.setCaptain(target);
+                                        for(ProxiedPlayer pls : party.getPlayers()){
+                                            pls.sendMessage(new TextComponent("§d[Groupe] §b" + player.getDisplayName() + " §aa transmis le lead à §e" + target.getDisplayName()));
                                         }
                                     }
                                     else
                                     {
-                                        player.sendMessage(new TextComponent("§d[Groupe] §cVous n'etes pas dans le meme groupe !"));
+                                        player.sendMessage(new TextComponent("§d[Groupe] §cSeul le capitaine du groupe peut transmettre le lead à un membre !"));
                                         return;
                                     }
                                 }
                                 else
                                 {
-                                    player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                                    player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
+                                    player.sendMessage(new TextComponent("§d[Groupe] §cVous n'etes pas dans le meme groupe !"));
                                     return;
                                 }
                             }
-                            else
-                            {
-                                player.sendMessage(new TextComponent("§d[Groupe] §cVous n'etes pas dans un groupe !"));
-                                return;
-                            }
                         }
-                        else
-                        {
-                            player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                            player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
-                            return;
-                        }
+                    }
+                    else
+                    {
+                        player.sendMessage(new TextComponent("§d[Groupe] §cVous n'etes pas dans un groupe !"));
+                        return;
                     }
                 }
             }

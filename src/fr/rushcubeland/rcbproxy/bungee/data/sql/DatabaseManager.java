@@ -1,4 +1,4 @@
-package fr.rushcubeland.rcbproxy.bungee.database;
+package fr.rushcubeland.rcbproxy.bungee.data.sql;
 
 public enum DatabaseManager {
 

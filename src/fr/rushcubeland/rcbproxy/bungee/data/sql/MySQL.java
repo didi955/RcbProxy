@@ -1,4 +1,4 @@
-package fr.rushcubeland.rcbproxy.bungee.database;
+package fr.rushcubeland.rcbproxy.bungee.data.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,11 +37,26 @@ public class MySQL {
     public static void createTables() {
 
         try {
-            update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "CREATE TABLE IF NOT EXISTS Proxyaccounts (" +
-                    "`#` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+            update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "CREATE TABLE IF NOT EXISTS Accounts (" +
+                    "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
                     "uuid VARCHAR(255), " +
                     "grade VARCHAR(255), " +
-                    "grade_end BIGINT)");
+                    "grade_end BIGINT, " +
+                    "coins BIGINT)");
+
+            update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "CREATE TABLE IF NOT EXISTS Friends (" +
+                    "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                    "uuid VARCHAR(255), " +
+                    "friend VARCHAR(255))");
+
+            update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "CREATE TABLE IF NOT EXISTS Options (" +
+                    "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                    "uuid VARCHAR(255), " +
+                    "state_party_invite VARCHAR(16), " +
+                    "state_friend_requests VARCHAR(16), " +
+                    "state_chat VARCHAR(16), " +
+                    "state_friends_statut_notif VARCHAR(16), " +
+                    "state_private_msg VARCHAR(16))");
 
             update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), "CREATE TABLE IF NOT EXISTS Proxyrank_permissions (" +
                     "`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +

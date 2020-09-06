@@ -1,7 +1,7 @@
-package fr.rushcubeland.rcbproxy.bungee.account;
+package fr.rushcubeland.rcbproxy.bungee.rank;
 
-import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
-import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
+import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
+import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
 import net.md_5.bungee.api.ChatColor;
 
 import java.sql.SQLException;

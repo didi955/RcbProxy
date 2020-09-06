@@ -1,8 +1,10 @@
 package fr.rushcubeland.rcbproxy.bungee.commands;
 
+import fr.rushcubeland.commons.AFriends;
+import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.rcbproxy.bungee.friends.Friend;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
-import fr.rushcubeland.rcbproxy.bungee.account.Account;
+import fr.rushcubeland.rcbproxy.bungee.utils.UUIDFetcher;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -11,7 +13,7 @@ import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 public class FriendCommand extends Command {
 
@@ -26,7 +28,8 @@ public class FriendCommand extends Command {
     public void execute(CommandSender sender, String[] args) {
         if(sender instanceof ProxiedPlayer){
             ProxiedPlayer player = (ProxiedPlayer) sender;
-            Optional<Account> account = RcbProxy.getInstance().getAccount(player);
+            Account account = RcbProxy.getInstance().getAccount(player);
+            AFriends aFriends = RcbProxy.getInstance().getAccountFriends(player);
             if(args.length == 0){
                 infos(player);
                 return;
@@ -60,26 +63,18 @@ public class FriendCommand extends Command {
                     }
                 }
                 if(args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("rm")){
-                    if(account.isPresent()){
-                        if(!args[1].equals(player.getName())){
-                            if(account.get().getDataFriends().areFriendWith(args[1])){
-                                Friend.removeFriend(player, args[1]);
-                            }
-                            else
-                            {
-                                player.sendMessage(new TextComponent("§d[Amis] §cVous n'etes pas ami avec §e" + args[1]));
-                            }
+                    if(!args[1].equals(player.getName())){
+                        if(aFriends.areFriendWith(UUID.fromString(UUIDFetcher.getUUIDFromName(args[1])))){
+                            Friend.removeFriend(player, args[1]);
                         }
                         else
                         {
-                            player.sendMessage(new TextComponent("§d[Amis] §cImpossible de vous supprimer de votre liste d'amis :)"));
+                            player.sendMessage(new TextComponent("§d[Amis] §cVous n'etes pas ami avec §e" + args[1]));
                         }
                     }
                     else
                     {
-                        player.sendMessage(new TextComponent("§cVotre compte est introuvable, veuillez vous reconnecter."));
-                        player.sendMessage(new TextComponent("§cSi le problème persite, veuillez contacter un administrateur."));
-                        return;
+                        player.sendMessage(new TextComponent("§d[Amis] §cImpossible de vous supprimer de votre liste d'amis :)"));
                     }
                 }
                 if(args[0].equalsIgnoreCase("accept")){

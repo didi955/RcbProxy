@@ -1,9 +1,8 @@
 package fr.rushcubeland.rcbproxy.bungee.mute;
 
 import fr.rushcubeland.rcbproxy.bungee.BungeeSend;
-import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
-import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
-import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
+import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
+import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
 import fr.rushcubeland.rcbproxy.bungee.utils.TimeUnit;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;

@@ -1,4 +1,4 @@
-package fr.rushcubeland.rcbproxy.bungee.options;
+package fr.rushcubeland.commons.options;
 
 import java.util.Arrays;
 
@@ -8,7 +8,7 @@ public enum OptionUnit {
     ONLY_FRIENDS("ONLY_FRIENDS"),
     OPEN("OPEN");
 
-    private String name;
+    private final String name;
 
     OptionUnit(String name) {
         this.name = name;

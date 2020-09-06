@@ -1,6 +1,5 @@
 package fr.rushcubeland.rcbproxy.bungee;
 
-import fr.rushcubeland.rcbproxy.bungee.options.OptionUnit;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -117,40 +116,6 @@ public class BungeeSend {
         }
     }
 
-    public static void sendFriendsDataAdd(ProxiedPlayer player, String target){
-        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(byteArrayOut);
-
-        try {
-            out.writeUTF("SendFriendsDataAdd");
-            out.writeUTF(player.getName());
-            out.writeUTF(target);
-
-            player.getServer().getInfo()
-                    .sendData(RcbProxy.channel, byteArrayOut.toByteArray());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendFriendsDataRemove(ProxiedPlayer player, String target){
-        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(byteArrayOut);
-
-        try {
-            out.writeUTF("SendFriendsDataRemove");
-            out.writeUTF(player.getName());
-            out.writeUTF(target);
-
-            player.getServer().getInfo()
-                    .sendData(RcbProxy.channel, byteArrayOut.toByteArray());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void sendGUIFriends(ProxiedPlayer player){
         ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(byteArrayOut);
@@ -174,91 +139,6 @@ public class BungeeSend {
         try {
             out.writeUTF("OptionsGUI");
             out.writeUTF(player.getName());
-
-            player.getServer().getInfo()
-                    .sendData(RcbProxy.channel, byteArrayOut.toByteArray());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendUpdateChatState(ProxiedPlayer player, OptionUnit option){
-        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(byteArrayOut);
-
-        try {
-            out.writeUTF("UpdateChatState");
-            out.writeUTF(player.getName());
-            out.writeUTF(option.getName());
-
-            player.getServer().getInfo()
-                    .sendData(RcbProxy.channel, byteArrayOut.toByteArray());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendUpdatePartyInviteState(ProxiedPlayer player, OptionUnit option){
-        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(byteArrayOut);
-
-        try {
-            out.writeUTF("UpdatePartyInviteState");
-            out.writeUTF(player.getName());
-            out.writeUTF(option.getName());
-
-            player.getServer().getInfo()
-                    .sendData(RcbProxy.channel, byteArrayOut.toByteArray());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendUpdateFriendRequestsState(ProxiedPlayer player, OptionUnit option){
-        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(byteArrayOut);
-
-        try {
-            out.writeUTF("UpdateFriendRequestsState");
-            out.writeUTF(player.getName());
-            out.writeUTF(option.getName());
-
-            player.getServer().getInfo()
-                    .sendData(RcbProxy.channel, byteArrayOut.toByteArray());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendUpdateFriendsStatutNotifState(ProxiedPlayer player, OptionUnit option){
-        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(byteArrayOut);
-
-        try {
-            out.writeUTF("UpdateFriendsStatutNotifState");
-            out.writeUTF(player.getName());
-            out.writeUTF(option.getName());
-
-            player.getServer().getInfo()
-                    .sendData(RcbProxy.channel, byteArrayOut.toByteArray());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void sendUpdateMPState(ProxiedPlayer player, OptionUnit option){
-        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(byteArrayOut);
-
-        try {
-            out.writeUTF("UpdateMPState");
-            out.writeUTF(player.getName());
-            out.writeUTF(option.getName());
 
             player.getServer().getInfo()
                     .sendData(RcbProxy.channel, byteArrayOut.toByteArray());
