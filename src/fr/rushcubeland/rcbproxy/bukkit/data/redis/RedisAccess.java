@@ -1,5 +1,6 @@
 package fr.rushcubeland.rcbproxy.bukkit.data.redis;
 
+import fr.rushcubeland.rcbproxy.bukkit.RcbProxy;
 import org.bukkit.Bukkit;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -19,7 +20,7 @@ public class RedisAccess {
     }
 
     public static void init(){
-        new RedisAccess(new RedisCredentials("127.0.0.1", "******", 6379));
+        new RedisAccess(new RedisCredentials(RcbProxy.getInstance().getConfig().getString("Redis.ip"), RcbProxy.getInstance().getConfig().getString("Redis.pass"), RcbProxy.getInstance().getConfig().getInt("Redis.port")));
     }
 
     public static void close(){
@@ -37,7 +38,7 @@ public class RedisAccess {
         config.useSingleServer()
                 .setAddress(redisCredentials.toRedisURL())
                 .setPassword(redisCredentials.getPassword())
-                .setDatabase(3)
+                .setDatabase(RcbProxy.getInstance().getConfig().getInt("Redis.database"))
                 .setClientName(redisCredentials.getClientName());
 
         return Redisson.create(config);

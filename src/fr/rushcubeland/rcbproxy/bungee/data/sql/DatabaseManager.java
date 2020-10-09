@@ -1,8 +1,10 @@
 package fr.rushcubeland.rcbproxy.bungee.data.sql;
 
+import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
+
 public enum DatabaseManager {
 
-    Main_BDD(new DatabaseCredentials("****", "*****", "*****, "*****", 3306));
+    Main_BDD(new DatabaseCredentials(RcbProxy.getInstance().getConfig().getString("Databases.database1.host"), RcbProxy.getInstance().getConfig().getString("Databases.database1.user"), RcbProxy.getInstance().getConfig().getString("Databases.database1.pass"), RcbProxy.getInstance().getConfig().getString("Databases.database1.dbname"), RcbProxy.getInstance().getConfig().getInt("Databases.database1.port")));
 
     private DatabaseAccess databaseAccess;
 

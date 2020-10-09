@@ -11,5 +11,3 @@ Redis:
   pass: ''
   port: 6379
   database: 3
-
-
