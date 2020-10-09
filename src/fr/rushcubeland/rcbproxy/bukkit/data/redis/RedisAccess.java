@@ -5,12 +5,14 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
+import fr.rushcubeland.rcbproxy.bukkit.RcbProxy;
 
 public class RedisAccess {
 
     public static RedisAccess INSTANCE;
 
     private RedissonClient redissonClient;
+
 
     public RedisAccess(RedisCredentials redisCredentials) {
         INSTANCE = this;
@@ -19,7 +21,7 @@ public class RedisAccess {
     }
 
     public static void init(){
-        new RedisAccess(new RedisCredentials("127.0.0.1", "dh57je24&*", 6379));
+        new RedisAccess(new RedisCredentials(String.valueOf(RcbProxy.getInstance().getConfig().get("Redis.ip")), RcbProxy.getInstance().getConfig().getString("Redis.pass"), RcbProxy.getInstance().getConfig().getInt("Redis.port")));
     }
 
     public static void close(){
@@ -37,7 +39,7 @@ public class RedisAccess {
         config.useSingleServer()
                 .setAddress(redisCredentials.toRedisURL())
                 .setPassword(redisCredentials.getPassword())
-                .setDatabase(3)
+                .setDatabase(RcbProxy.getInstance().getConfig().getInt("Redis.database"))
                 .setClientName(redisCredentials.getClientName());
 
         return Redisson.create(config);

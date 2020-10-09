@@ -20,6 +20,8 @@ public class RcbProxy extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        saveDefaultConfig();
+
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, channel);
         Bukkit.getMessenger().registerIncomingPluginChannel(this, channel, new BukkitReceive());
 

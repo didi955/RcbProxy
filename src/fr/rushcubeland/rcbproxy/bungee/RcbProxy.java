@@ -54,6 +54,8 @@ public class RcbProxy extends Plugin {
     public void onEnable() {
         instance = this;
 
+        loadConfig();
+
         ProxyServer.getInstance().registerChannel(channel);
         ProxyServer.getInstance().getPluginManager().registerListener(this, new BungeeReceive());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new AutoCompletion());
