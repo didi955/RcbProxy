@@ -1,8 +1,14 @@
 package fr.rushcubeland.rcbproxy.bungee;
 
 import com.google.common.io.ByteStreams;
-import fr.rushcubeland.rcbproxy.bungee.account.Account;
-import fr.rushcubeland.rcbproxy.bungee.account.RankUnit;
+import fr.rushcubeland.commons.*;
+import fr.rushcubeland.rcbproxy.bungee.data.redis.RedisAccess;
+import fr.rushcubeland.rcbproxy.bungee.exceptions.AccountNotFoundException;
+import fr.rushcubeland.rcbproxy.bungee.provider.AccountProvider;
+import fr.rushcubeland.rcbproxy.bungee.provider.FriendsProvider;
+import fr.rushcubeland.rcbproxy.bungee.provider.OptionsProvider;
+import fr.rushcubeland.rcbproxy.bungee.provider.PermissionsProvider;
+import fr.rushcubeland.rcbproxy.bungee.rank.RankUnit;
 import fr.rushcubeland.rcbproxy.bungee.ban.BanManager;
 import fr.rushcubeland.rcbproxy.bungee.commands.*;
 import fr.rushcubeland.rcbproxy.bungee.listeners.ProxyPing;
@@ -10,10 +16,11 @@ import fr.rushcubeland.rcbproxy.bungee.mute.CheckMuteStateTask;
 import fr.rushcubeland.rcbproxy.bungee.mute.MuteManager;
 import fr.rushcubeland.rcbproxy.bungee.parties.Party;
 import fr.rushcubeland.rcbproxy.bungee.utils.TimeUnit;
-import fr.rushcubeland.rcbproxy.bungee.database.DatabaseManager;
-import fr.rushcubeland.rcbproxy.bungee.database.MySQL;
+import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
+import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
 import fr.rushcubeland.rcbproxy.bungee.listeners.ProxiedPlayerJoin;
 import fr.rushcubeland.rcbproxy.bungee.listeners.ProxiedPlayerQuit;
+import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -30,14 +37,16 @@ import java.util.Optional;
 public class RcbProxy extends Plugin {
 
     private static RcbProxy instance;
-    private List<Account> accounts;
-    private List<Party> parties;
+
+    private final List<Party> parties = new ArrayList<>();
+    private final List<AParty> accountParty = new ArrayList<>();
+
+    private final HashMap<ProxiedPlayer, ProxiedPlayer> mpData = new HashMap<>();
+
     public static String channel = "rcbproxy:main";
 
     private BanManager banManager;
     private MuteManager muteManager;
-
-    private final HashMap<ProxiedPlayer, ProxiedPlayer> mpData = new HashMap<>();
 
     private Configuration config;
 
@@ -52,14 +61,14 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxiedPlayerQuit());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxyPing());
 
-        accounts = new ArrayList<>();
-        parties = new ArrayList<>();
-
         initCommands();
         TimeUnit.initTimeUnit();
 
         DatabaseManager.initAllDatabaseConnections();
         MySQL.createTables();
+
+        RedisAccess.init();
+
         initAllRankPermissions();
 
         this.banManager = new BanManager();
@@ -75,7 +84,11 @@ public class RcbProxy extends Plugin {
     public void onDisable() {
         closeAllRankPermissions();
         getBanManager().onDisableProxy();
+
         DatabaseManager.closeAllDatabaseConnection();
+
+        RedisAccess.close();
+
         instance = null;
     }
 
@@ -153,16 +166,85 @@ public class RcbProxy extends Plugin {
         }
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
+    public Account getAccount(ProxiedPlayer player) {
+
+        final Account[] account = {AccountProvider.DEFAULT_ACCOUNT};
+
+        BungeeCord.getInstance().getScheduler().runAsync(this, () -> {
+            try {
+
+                final AccountProvider accountProvider = new AccountProvider(player);
+                account[0] = accountProvider.getAccount();
+
+
+            } catch (AccountNotFoundException exception) {
+                System.err.println(exception.getMessage());
+            }
+        });
+
+        return account[0];
     }
+
+    public AOptions getAccountOptions(ProxiedPlayer player) {
+
+        final AOptions[] account = {OptionsProvider.DEFAULT_ACCOUNT};
+
+        BungeeCord.getInstance().getScheduler().runAsync(this, () -> {
+            try {
+
+                final OptionsProvider accountProvider = new OptionsProvider(player);
+                account[0] = accountProvider.getAccount();
+
+
+            } catch (AccountNotFoundException exception) {
+                System.err.println(exception.getMessage());
+            }
+        });
+
+        return account[0];
+    }
+
+    public AFriends getAccountFriends(ProxiedPlayer player) {
+
+        final AFriends[] account = {FriendsProvider.DEFAULT_ACCOUNT};
+
+        BungeeCord.getInstance().getScheduler().runAsync(this, () -> {
+            try {
+
+                final FriendsProvider accountProvider = new FriendsProvider(player);
+                account[0] = accountProvider.getAccount();
+
+
+            } catch (AccountNotFoundException exception) {
+                System.err.println(exception.getMessage());
+            }
+        });
+
+        return account[0];
+    }
+
+    public APermissions getAccountPermissions(ProxiedPlayer player) {
+
+        final APermissions[] account = {PermissionsProvider.DEFAULT_ACCOUNT};
+
+        BungeeCord.getInstance().getScheduler().runAsync(this, () -> {
+            try {
+
+                final PermissionsProvider accountProvider = new PermissionsProvider(player);
+                account[0] = accountProvider.getAccount();
+
+
+            } catch (AccountNotFoundException exception) {
+                System.err.println(exception.getMessage());
+            }
+        });
+
+        return account[0];
+    }
+
 
     public List<Party> getParties() {
         return parties;
-    }
-
-    public Optional<Account> getAccount(ProxiedPlayer player){
-        return new ArrayList<>(accounts).stream().filter(a -> a.getUUID().equals(player.getUniqueId().toString())).findFirst();
     }
 
     public BanManager getBanManager() {
@@ -177,11 +259,19 @@ public class RcbProxy extends Plugin {
         return channel;
     }
 
+    public List<AParty> getAPartyList() {
+        return accountParty;
+    }
+
     public HashMap<ProxiedPlayer, ProxiedPlayer> getMpData() {
         return mpData;
     }
 
     public Configuration getConfig() {
         return config;
+    }
+
+    public Optional<AParty> getAccountParty(ProxiedPlayer player){
+        return new ArrayList<>(accountParty).stream().filter(a -> a.getUuid().toString().equals(player.getUniqueId().toString())).findFirst();
     }
 }

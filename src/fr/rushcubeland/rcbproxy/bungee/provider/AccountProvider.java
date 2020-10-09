@@ -7,6 +7,7 @@ import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
 import fr.rushcubeland.rcbproxy.bungee.exceptions.AccountNotFoundException;
 import fr.rushcubeland.rcbproxy.bungee.rank.RankUnit;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.redisson.api.RBatch;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 
