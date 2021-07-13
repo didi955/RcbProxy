@@ -1,27 +1,27 @@
 package fr.rushcubeland.commons;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class APermissions implements Cloneable {
 
     private UUID uuid;
-    private ArrayList<String> permissions = new ArrayList<>();
+    private List<String> permissions;
 
     public APermissions(){
     }
 
-    public APermissions(UUID uuid, ArrayList<String> permissions) {
+    public APermissions(UUID uuid, List<String> permissions) {
         this.uuid = uuid;
         this.permissions = permissions;
     }
 
-    public ArrayList<String> getPermissions() {
+    public List<String> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(ArrayList<String> permissions) {
+    public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
     }
 
@@ -38,7 +38,7 @@ public class APermissions implements Cloneable {
     }
 
     public void removePermission(String... permissions){
-        this.permissions.addAll(Arrays.asList(permissions));
+        this.permissions.removeAll(Arrays.asList(permissions));
     }
 
     public APermissions clone(){

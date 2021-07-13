@@ -4,7 +4,7 @@ import fr.rushcubeland.commons.AParty;
 import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.commons.options.OptionUnit;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
-import fr.rushcubeland.rcbproxy.bungee.exceptions.AccountNotFoundException;
+import fr.rushcubeland.rcbproxy.bungee.data.exceptions.AccountNotFoundException;
 import fr.rushcubeland.rcbproxy.bungee.provider.AccountProvider;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -105,7 +105,7 @@ public class Parties {
     }
 
     public static void sendRequest(ProxiedPlayer sender, ProxiedPlayer target){
-        if(!RcbProxy.getInstance().getAccountParty(sender).isPresent() || RcbProxy.getInstance().getAccountParty(target).isPresent()){
+        if(RcbProxy.getInstance().getAccountParty(sender).isEmpty() || RcbProxy.getInstance().getAccountParty(target).isEmpty()){
             return;
         }
         if(RcbProxy.getInstance().getAccountParty(sender).get().isInParty() && RcbProxy.getInstance().getAccountParty(target).get().isInParty()){

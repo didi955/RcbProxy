@@ -10,8 +10,8 @@ import fr.rushcubeland.rcbproxy.bungee.data.redis.RedisAccess;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
 import fr.rushcubeland.rcbproxy.bungee.provider.FriendsProvider;
+import fr.rushcubeland.rcbproxy.bungee.rank.RankUnit;
 import fr.rushcubeland.rcbproxy.bungee.utils.UUIDFetcher;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -37,8 +37,11 @@ public class Friend {
                 Account account2 = RcbProxy.getInstance().getAccount(target);
                 AFriends aFriends2 = RcbProxy.getInstance().getAccountFriends(target);
                 aFriends2.removeFriend(player.getUniqueId());
+                aFriends.removeFriend(target.getUniqueId());
                 target.sendMessage(new TextComponent("§d[Amis] §e" + account.getRank().getPrefix() + player.getName() + " §cvous a retiré de sa liste d'amis !"));
                 player.sendMessage(new TextComponent("§d[Amis] §cVous avez retiré §e" + account2.getRank().getPrefix() + target.getName() + " §cde votre liste d'amis !"));
+                final FriendsProvider friendsProvider = new FriendsProvider(target);
+                friendsProvider.sendFriendsToRedis(aFriends2);
             }
             else
             {
@@ -46,11 +49,8 @@ public class Friend {
                 forceRemoveOfflineFriend(player, targetName);
                 player.sendMessage(new TextComponent("§d[Amis] §cVous avez §cretiré §e" + targetName + " §cde votre liste d'amis !"));
             }
-            BungeeCord.getInstance().getScheduler().runAsync(RcbProxy.getInstance(), () -> {
-
-                final FriendsProvider friendsProvider = new FriendsProvider(player);
-                friendsProvider.sendFriendsToRedis(aFriends);
-            });
+            final FriendsProvider friendsProvider = new FriendsProvider(player);
+            friendsProvider.sendFriendsToRedis(aFriends);
         }
         else
         {
@@ -66,21 +66,16 @@ public class Friend {
             if(target != null){
                 Account account2 = RcbProxy.getInstance().getAccount(target);
                 AFriends aFriends2 = RcbProxy.getInstance().getAccountFriends(target);
-                if(!aFriends.hasReachedMaxFriends() || !aFriends2.hasReachedMaxFriends()){
+                if(aFriends.hasReachedMaxFriends() || aFriends2.hasReachedMaxFriends()){
                     aFriends.addFriend(UUID.fromString(UUIDFetcher.getUUIDFromName(targetName)));
                     aFriends2.addFriend(player.getUniqueId());
                     target.sendMessage(new TextComponent("§d[Amis] §e" + account.getRank().getPrefix() + player.getName() + " §6vous a §aajouté §6à sa liste d'amis !"));
                     player.sendMessage(new TextComponent("§d[Amis] §6Vous avez §aajouté §e" + account2.getRank().getPrefix() + target.getName() + " §6de votre liste d'amis !"));
-                    BungeeCord.getInstance().getScheduler().runAsync(RcbProxy.getInstance(), () -> {
 
-                        final FriendsProvider friendsProvider = new FriendsProvider(player);
-                        friendsProvider.sendFriendsToRedis(aFriends);
-                    });
-                    BungeeCord.getInstance().getScheduler().runAsync(RcbProxy.getInstance(), () -> {
-
-                        final FriendsProvider friendsProvider = new FriendsProvider(target);
-                        friendsProvider.sendFriendsToRedis(aFriends2);
-                    });
+                    final FriendsProvider friendsProvider = new FriendsProvider(player);
+                    friendsProvider.sendFriendsToRedis(aFriends);
+                    final FriendsProvider friendsProvider2 = new FriendsProvider(target);
+                    friendsProvider2.sendFriendsToRedis(aFriends2);
                 }
                 else
                 {
@@ -129,9 +124,9 @@ public class Friend {
         Account account = RcbProxy.getInstance().getAccount(sender);
         Account account2 = RcbProxy.getInstance().getAccount(receiver);
         AFriends aFriends = RcbProxy.getInstance().getAccountFriends(sender);
-        AOptions aOptions2 = RcbProxy.getInstance().getAccountOptions(receiver);
+        AOptions aOptions52 = RcbProxy.getInstance().getAccountOptions(receiver);
         if(!aFriends.areFriendWith(receiver.getUniqueId())){
-            if(aOptions2.getStateFriendRequests().equals(OptionUnit.OPEN)){
+            if(aOptions52.getStateFriendRequests().equals(OptionUnit.OPEN)){
                 if(datarequest.containsKey(sender)){
                     if(!(datarequest.get(sender).contains(receiver))){
                         sender.sendMessage(new TextComponent("§d[Amis] §6Vous avez §aenvoyé §6une requête d'ami à " + account2.getRank().getPrefix() + receiver.getName()));
@@ -202,7 +197,7 @@ public class Friend {
             AFriends aFriends=  accountRBucket.get();
             if(aFriends == null){
                 try {
-                    MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("DELETE FROM Proxyplayer_friends WHERE uuid='%s' AND friend='%s'",
+                    MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("DELETE FROM Friends WHERE uuid='%s' AND friend='%s'",
                             player.getUniqueId().toString(), uuid));
                 } catch (SQLException exception) {
                     exception.printStackTrace();
@@ -215,10 +210,8 @@ public class Friend {
                     if(UUID.fromString(uuid).equals(f)){
                         friends.remove(f);
                         aFriends.setFriends(friends);
-                        BungeeCord.getInstance().getScheduler().runAsync(RcbProxy.getInstance(), () -> {
-                            final FriendsProvider accountProvider = new FriendsProvider(player);
-                            accountProvider.sendFriendsToRedis(aFriends);
-                        });
+                        final FriendsProvider accountProvider = new FriendsProvider(player);
+                        accountProvider.sendFriendsToRedis(aFriends);
                     }
                 }
             }
@@ -230,9 +223,10 @@ public class Friend {
         for(UUID friend : aFriends.getFriends()){
             ProxiedPlayer friendP = ProxyServer.getInstance().getPlayer(friend);
             if(friendP != null){
-                AOptions aOptions2 = RcbProxy.getInstance().getAccountOptions(friendP);
-                if(aOptions2.getStateFriendsStatutNotif().equals(OptionUnit.OPEN)){
-                    friendP.sendMessage(new TextComponent("§d[Ami] §b" + player.getName() + " §cs'est déconnecté !"));
+                AOptions aOptions52 = RcbProxy.getInstance().getAccountOptions(friendP);
+                if(aOptions52.getStateFriendsStatutNotif().equals(OptionUnit.OPEN)){
+                    RankUnit rank = RcbProxy.getInstance().getAccount(player).getRank();
+                    friendP.sendMessage(new TextComponent("§d[Ami] §b" + rank.getPrefix() + player.getName() + " §cs'est déconnecté !"));
                 }
             }
         }
@@ -243,13 +237,13 @@ public class Friend {
         for(UUID friend : aFriends.getFriends()){
             ProxiedPlayer friendP = ProxyServer.getInstance().getPlayer(friend);
             if(friendP != null){
-                AOptions aOptions2 = RcbProxy.getInstance().getAccountOptions(friendP);
-                if(aOptions2.getStateFriendsStatutNotif().equals(OptionUnit.OPEN)){
-                    friendP.sendMessage(new TextComponent("§d[Ami] §b" + player.getName() + " §as'est connecté !"));
+                AOptions aOptions52 = RcbProxy.getInstance().getAccountOptions(friendP);
+                if(aOptions52.getStateFriendsStatutNotif().equals(OptionUnit.OPEN)){
+                    RankUnit rank = RcbProxy.getInstance().getAccount(player).getRank();
+                    friendP.sendMessage(new TextComponent("§d[Ami] §b" + rank.getPrefix() + player.getName() + " §as'est connecté !"));
                 }
             }
         }
-
     }
 
     public static HashMap<ProxiedPlayer, ArrayList<ProxiedPlayer>> getDatarequest() {

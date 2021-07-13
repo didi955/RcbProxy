@@ -1,6 +1,7 @@
 package fr.rushcubeland.rcbproxy.bungee.listeners;
 
 import fr.rushcubeland.commons.AParty;
+import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.friends.Friend;
 import fr.rushcubeland.rcbproxy.bungee.parties.Parties;
@@ -17,6 +18,9 @@ public class ProxiedPlayerQuit implements Listener {
     @EventHandler
     public void onQuit(PlayerDisconnectEvent e){
         ProxiedPlayer player = e.getPlayer();
+        Account account = RcbProxy.getInstance().getAccount(player);
+        account.setState(false);
+        RcbProxy.getInstance().sendAccountToRedis(account);
         removeMpData(player);
         removePartyData(player);
         Friend.quitNotifFriends(player);

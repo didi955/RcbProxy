@@ -157,7 +157,7 @@ public class AutoCompletion implements Listener {
                         return;
                     }
                 }
-                if(ReportCommand.getCmd().contains(args[0].replaceAll("/", "")) && e
+                if(ReportCommand.getCmds().contains(args[0].replaceAll("/", "")) && e
                         .getCursor().contains(" ")) {
 
                     e.getSuggestions().clear();
@@ -250,6 +250,7 @@ public class AutoCompletion implements Listener {
                         e.getSuggestions().add("deny");
                         e.getSuggestions().add("disband");
                         e.getSuggestions().add("leave");
+                        e.getSuggestions().add("lead");
                     }
                     if (args.length == 2 && getSpace(e.getCursor()) == 1) {
                         addSuggestionsArgParty(e, args);
@@ -314,7 +315,7 @@ public class AutoCompletion implements Listener {
 
     private void addSuggestionsArgParty(TabCompleteEvent e, String[] args) {
         String check = args[args.length - 1];
-        List<String> argParty = Arrays.asList("list", "remove", "deny", "accept", "add", "leave", "disband");
+        List<String> argParty = Arrays.asList("list", "remove", "deny", "accept", "add", "leave", "disband", "lead");
 
         for(String s : argParty){
             if(s.startsWith(check)){

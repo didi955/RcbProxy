@@ -1,5 +1,6 @@
 package fr.rushcubeland.commons;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ public class AFriends implements Cloneable {
     private List<UUID> friends;
     private int maxFriends;
 
-    public AFriends(UUID uuid, int maxFriends, List<UUID> friends) {
+    public AFriends(UUID uuid, int maxFriends, ArrayList<UUID> friends) {
         this.uuid = uuid;
         this.maxFriends = maxFriends;
         this.friends = friends;
@@ -48,10 +49,7 @@ public class AFriends implements Cloneable {
     }
 
     public boolean areFriendWith(UUID uuid){
-        if(friends.contains(uuid)){
-            return true;
-        }
-        return false;
+        return friends.contains(uuid);
     }
 
     public boolean hasReachedMaxFriends(){
@@ -59,10 +57,7 @@ public class AFriends implements Cloneable {
         for(UUID friend : friends){
             a = a+1;
         }
-        if(maxFriends <= a){
-            return true;
-        }
-        return false;
+        return maxFriends > a;
     }
 
     public void setUuid(UUID uuid) {

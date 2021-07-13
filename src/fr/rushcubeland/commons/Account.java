@@ -7,24 +7,30 @@ import java.util.UUID;
 public class Account implements Cloneable {
 
     private UUID uuid;
-
+    private RankUnit primaryRank;
+    private RankUnit secondaryRank;
+    private long primaryRank_end;
+    private long secondaryRank_end;
+    private boolean state;
+    private String server;
     private long coins;
-
-    private RankUnit grade;
-    private long grade_end;
 
     public Account() {
     }
 
-    public Account(UUID uuid, RankUnit grade, long coins) {
-        this(uuid, grade, -1, coins);
+    public Account(UUID uuid, RankUnit primaryRank, RankUnit secondaryRank, long coins) {
+        this(uuid, primaryRank, secondaryRank, -1, -1, coins);
+        this.state = false;
     }
 
-    public Account(UUID uuid, RankUnit grade, long grade_end, long coins) {
+    public Account(UUID uuid, RankUnit primaryRank, RankUnit secondaryRank,  long primaryRank_end, long secondaryRank_end, long coins) {
         this.uuid = uuid;
-        this.grade = grade;
+        this.primaryRank = primaryRank;
+        this.secondaryRank = secondaryRank;
         this.coins = coins;
-        this.grade_end = grade_end;
+        this.primaryRank_end = primaryRank_end;
+        this.secondaryRank_end = secondaryRank_end;
+        this.state = false;
     }
 
     public UUID getUuid() {
@@ -36,30 +42,52 @@ public class Account implements Cloneable {
     }
 
     public RankUnit getRank() {
-        return grade;
+        if(primaryRank == null){
+            return secondaryRank;
+        }
+        return primaryRank;
     }
 
     public long getRank_end() {
-        return grade_end;
+        if(primaryRank == null){
+            return secondaryRank_end;
+        }
+        return primaryRank_end;
     }
 
     public void setRank(RankUnit rank) {
-        grade = rank;
-        grade_end= -1;
+        secondaryRank = rank;
+        secondaryRank_end = -1;
     }
 
     public void setRank(RankUnit rank, long seconds) {
-        if(grade_end <= 0){
+        if(seconds <= 0){
             setRank(rank);
         }
         else
         {
-            grade = rank;
-            this.grade_end = seconds*1000 + System.currentTimeMillis();
+            secondaryRank = rank;
+            this.secondaryRank_end = seconds*1000 + System.currentTimeMillis();
         }
     }
 
-    public double getCoins() {
+    public RankUnit getPrimaryRank() {
+        return primaryRank;
+    }
+
+    public RankUnit getSecondaryRank() {
+        return secondaryRank;
+    }
+
+    public long getPrimaryRank_end() {
+        return primaryRank_end;
+    }
+
+    public long getSecondaryRank_end() {
+        return secondaryRank_end;
+    }
+
+    public long getCoins() {
         return coins;
     }
 
@@ -67,12 +95,60 @@ public class Account implements Cloneable {
         this.coins = coins;
     }
 
-    public boolean rankIsTemporary(){
-        return grade_end != -1;
+    public boolean primaryRankIsTemporary(){
+        return primaryRank_end != -1;
     }
 
-    public boolean rankIsValid(){
-        return grade_end != -1 && grade_end < System.currentTimeMillis();
+    public boolean secondaryRankIsTemporary(){
+        return secondaryRank_end != -1;
+    }
+
+    public boolean getState() {
+        return state;
+    }
+
+    public String getServer() {
+        return server;
+    }
+
+    public boolean isState(boolean state){
+        if(state == this.state){
+            return true;
+        }
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
+
+    public void setServer(String server) {
+        this.server = server;
+    }
+
+    public boolean RankIsValid(){
+        if(primaryRank != null){
+            if(!primaryRankIsValid()){
+                primaryRank = null;
+                primaryRank_end = -1;
+                return false;
+
+            }
+        }
+        else if(!secondaryRankIsValid()){
+            secondaryRank = null;
+            secondaryRank_end = -1;
+            return false;
+        }
+        return true;
+    }
+
+    public boolean primaryRankIsValid(){
+        return primaryRank_end != -1 && primaryRank_end < System.currentTimeMillis();
+    }
+
+    public boolean secondaryRankIsValid(){
+        return secondaryRank_end != -1 && secondaryRank_end < System.currentTimeMillis();
     }
 
     public Account clone(){
@@ -86,11 +162,4 @@ public class Account implements Cloneable {
         return null;
     }
 
-    public long getGrade_end() {
-        return grade_end;
-    }
-
-    public void setGrade_end(long grade_end) {
-        this.grade_end = grade_end;
-    }
 }

@@ -4,10 +4,9 @@ import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.rcbproxy.bungee.data.redis.RedisAccess;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
-import fr.rushcubeland.rcbproxy.bungee.exceptions.AccountNotFoundException;
+import fr.rushcubeland.rcbproxy.bungee.data.exceptions.AccountNotFoundException;
 import fr.rushcubeland.rcbproxy.bungee.rank.RankUnit;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.redisson.api.RBatch;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 
@@ -20,16 +19,22 @@ import java.util.UUID;
 public class AccountProvider {
 
     public static final String REDIS_KEY = "account:";
-    public static final Account DEFAULT_ACCOUNT = new Account(UUID.randomUUID(), RankUnit.JOUEUR, 0);
+    public static final Account DEFAULT_ACCOUNT = new Account(UUID.randomUUID(), null, RankUnit.JOUEUR, 0);
 
-    private ProxiedPlayer player;
-    private RedisAccess redisAccess;
-    private UUID uuid;
+    private final ProxiedPlayer player;
+    private final RedisAccess redisAccess;
+    private final UUID uuid;
 
     public AccountProvider(ProxiedPlayer player) {
         this.player = player;
         this.redisAccess = RedisAccess.INSTANCE;
         this.uuid = player.getUniqueId();
+    }
+
+    public AccountProvider(UUID uuid) {
+        this.player = null;
+        this.redisAccess = RedisAccess.INSTANCE;
+        this.uuid = uuid;
     }
 
     public Account getAccount() throws AccountNotFoundException {
@@ -59,7 +64,7 @@ public class AccountProvider {
         return accountRBucket.get();
     }
 
-    private Account getAccountFromDatabase() throws AccountNotFoundException {
+    private Account getAccountFromDatabase() {
 
         Account account = null;
 
@@ -74,12 +79,17 @@ public class AccountProvider {
             final ResultSet rs = preparedStatement.getResultSet();
 
             if(rs.next()){
-
-                final RankUnit rank = RankUnit.getByName(rs.getString("grade"));
-                final long grade_end = rs.getLong("grade_end");
+                
+                RankUnit rank = null;
+                if(!rs.getString("primaryRank").equals("NULL")){
+                    rank = RankUnit.getByName(rs.getString("primaryRank"));
+                }
+                final RankUnit rank2 = RankUnit.getByName(rs.getString("secondaryRank"));
+                final long rank_end = rs.getLong("primaryRank_end");
+                final long rank2_end = rs.getLong("secondaryRank_end");
                 final long coins = rs.getLong("coins");
 
-                account = new Account(uuid, rank, grade_end, coins);
+                account = new Account(uuid, rank, rank2, rank_end, rank2_end, coins);
 
             }
             else
@@ -102,8 +112,8 @@ public class AccountProvider {
 
         try {
 
-            MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Accounts (uuid, grade, grade_end, coins) VALUES ('%s', '%s', '%s', '%s')",
-                    uuid.toString(), account.getRank().getName(), account.getRank_end(), account.getCoins()));
+            MySQL.update(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("INSERT INTO Accounts (uuid, primaryRank, secondaryRank, primaryRank_end, secondaryRank_end, coins) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')",
+                    uuid.toString(), "NULL", account.getSecondaryRank().getName(), account.getPrimaryRank_end(), account.getSecondaryRank_end(), account.getCoins()));
 
         } catch (SQLException exception) {
             exception.printStackTrace();

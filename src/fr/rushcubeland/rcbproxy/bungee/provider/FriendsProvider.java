@@ -1,12 +1,9 @@
 package fr.rushcubeland.rcbproxy.bungee.provider;
 
 import fr.rushcubeland.commons.AFriends;
-import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.rcbproxy.bungee.data.redis.RedisAccess;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
-import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
-import fr.rushcubeland.rcbproxy.bungee.exceptions.AccountNotFoundException;
-import fr.rushcubeland.rcbproxy.bungee.rank.RankUnit;
+import fr.rushcubeland.rcbproxy.bungee.data.exceptions.AccountNotFoundException;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -64,7 +61,7 @@ public class FriendsProvider {
     private AFriends getFriendsFromDatabase() {
 
         AFriends aFriends = null;
-        List<UUID> friends = new ArrayList<>();
+        ArrayList<UUID> friends = new ArrayList<>();
 
         try {
 

@@ -9,10 +9,7 @@ public class Network {
 
     public static void JoinLobby(ProxiedPlayer player){
         if(!player.getServer().getInfo().getName().startsWith("Lobby")){
-            int r = new Random().nextInt(1);
-            if(r == 0){
-                player.connect(ServerUnit.Lobby_1.getServerInfo());
-            }
+            player.connect(ServerUnit.Lobby_1.getServerInfo());
         }
         else
         {

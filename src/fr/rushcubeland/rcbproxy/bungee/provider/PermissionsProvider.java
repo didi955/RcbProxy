@@ -4,19 +4,22 @@ import fr.rushcubeland.commons.APermissions;
 import fr.rushcubeland.rcbproxy.bungee.data.redis.RedisAccess;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
-import fr.rushcubeland.rcbproxy.bungee.exceptions.AccountNotFoundException;
+import fr.rushcubeland.rcbproxy.bungee.data.exceptions.AccountNotFoundException;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class PermissionsProvider {
 
     public static final String REDIS_KEY = "permissions:";
-    public static final APermissions DEFAULT_ACCOUNT = new APermissions(UUID.randomUUID(), new ArrayList<>());
 
     private ProxiedPlayer player;
     private RedisAccess redisAccess;
@@ -57,33 +60,34 @@ public class PermissionsProvider {
         return accountRBucket.get();
     }
 
-    private APermissions getPermissionsFromDatabase() throws AccountNotFoundException {
+    private APermissions getPermissionsFromDatabase() {
 
-        ArrayList<String> perms = new ArrayList<>();
+        List<String> perms = new ArrayList<>();
+        APermissions aPermissions = null;
 
         try {
-            MySQL.query(DatabaseManager.Main_BDD.getDatabaseAccess().getConnection(), String.format("SELECT * FROM Permissions WHERE uuid='%s'", this.player.getUniqueId().toString()), rs -> {
-                try {
+            final Connection connection = DatabaseManager.Main_BDD.getDatabaseAccess().getConnection();
+            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Player_permissions WHERE uuid=?");
+            preparedStatement.setString(1, uuid.toString());
+            preparedStatement.executeQuery();
 
-                    while(rs.next()) {
+            final ResultSet rs = preparedStatement.getResultSet();
 
-                        String permission = rs.getString("permission");
-                        perms.add(permission);
+            while(rs.next()) {
 
-                    }
+                String permission = rs.getString("permission");
+                perms.add(permission);
 
-                    return new APermissions(uuid, perms);
+            }
 
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            });
+            aPermissions = new APermissions(uuid, perms);
+            connection.close();
+
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return null;
+        return aPermissions;
     }
 
 

@@ -1,7 +1,9 @@
 package fr.rushcubeland.rcbproxy.bungee.commands;
 
+import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.rcbproxy.bungee.BungeeSend;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
+import fr.rushcubeland.rcbproxy.bungee.rank.RankUnit;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -29,7 +31,6 @@ public class Btp extends Command {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Seul un joueur peut effectuer cette commande !"));
             return;
         }
-        ProxiedPlayer player = (ProxiedPlayer) sender;
         if (!sender.hasPermission("rcbproxy.tp")) {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Vous n'avez pas la permission de faire ceci !"));
             return;
@@ -51,7 +52,9 @@ public class Btp extends Command {
                 return;
             }
             teleport(from, to);
-            from.sendMessage(new TextComponent(ChatColor.GREEN + "Vous avez été téleporté vers " + ChatColor.DARK_GREEN + "" + ChatColor.BOLD + to.getName()));
+            Account accountT = RcbProxy.getInstance().getAccount(to);
+            RankUnit rankT = accountT.getRank();
+            from.sendMessage(new TextComponent(ChatColor.GREEN + "Vous avez été téleporté vers " + rankT.getPrefix() + to.getDisplayName()));
 
             return;
         }
@@ -75,7 +78,13 @@ public class Btp extends Command {
             }
             teleport(from, to);
 
-            sender.sendMessage(new TextComponent(ChatColor.DARK_GREEN + "" + ChatColor.BOLD + from.getName() + ChatColor.RESET + "" + ChatColor.GREEN + " a été téleporté vers " + ChatColor.DARK_GREEN + "" + ChatColor.BOLD + to.getName() + "."));
+            Account accountF = RcbProxy.getInstance().getAccount(from);
+            RankUnit rankF = accountF.getRank();
+
+            Account accountT = RcbProxy.getInstance().getAccount(to);
+            RankUnit rankT = accountT.getRank();
+
+            sender.sendMessage(new TextComponent(rankF.getPrefix() + from.getDisplayName() + " §6a été téleporté vers " + rankT.getPrefix() + to.getDisplayName()));
         }
 
     }

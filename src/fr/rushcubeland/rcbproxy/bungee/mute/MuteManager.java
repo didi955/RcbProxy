@@ -39,17 +39,12 @@ public class MuteManager {
                     getTimeLeft(uuid)));
         }
 
-        if(this.dataunmute.contains(uuid.toString())){
-            this.dataunmute.remove(uuid.toString());
-        }
+        this.dataunmute.remove(uuid.toString());
 
     }
 
     public boolean isMuted(UUID uuid){
-        if(this.datamute.containsKey(uuid.toString())){
-            return true;
-        }
-        return false;
+        return this.datamute.containsKey(uuid.toString());
     }
 
     public long getEnd(UUID uuid){

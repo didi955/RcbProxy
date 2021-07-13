@@ -2,19 +2,26 @@ package fr.rushcubeland.rcbproxy.bukkit;
 
 import fr.rushcubeland.commons.AFriends;
 import fr.rushcubeland.commons.AOptions;
+import fr.rushcubeland.commons.APermissions;
+import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.rcbproxy.bukkit.data.redis.RedisAccess;
 import fr.rushcubeland.rcbproxy.bukkit.listeners.*;
 import fr.rushcubeland.rcbproxy.bukkit.mod.ModModeratorTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
+
 public class RcbProxy extends JavaPlugin {
 
     private static RcbProxy instance;
-    private String channel = "rcbproxy:main";
+    private final String channel = "rcbproxy:main";
 
     @Override
     public void onEnable() {
@@ -25,17 +32,7 @@ public class RcbProxy extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, channel);
         Bukkit.getMessenger().registerIncomingPluginChannel(this, channel, new BukkitReceive());
 
-        Bukkit.getServer().getPluginManager().registerEvents(new BukkitReceive(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ClickEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ChatEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new JoinEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new FoodChange(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new PlaceBlock(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new BreackBlock(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new DamageEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new PickupEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new DropEvent(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new QuitEvent(), this);
+        registerEvents();
 
         RedisAccess.init();
 
@@ -48,45 +45,75 @@ public class RcbProxy extends JavaPlugin {
         instance = null;
         RedisAccess.close();
     }
-
-    public interface Callback<T>
-    {
-        void execute(T response);
+    
+    private void registerEvents(){
+        PluginManager pm = Bukkit.getServer().getPluginManager();
+        pm.registerEvents(new BukkitReceive(), this);
+        pm.registerEvents(new ClickEvent(), this);
+        pm.registerEvents(new ChatEvent(), this);
+        pm.registerEvents(new JoinEvent(), this);
+        pm.registerEvents(new FoodChange(), this);
+        pm.registerEvents(new PlaceBlock(), this);
+        pm.registerEvents(new BreackBlock(), this);
+        pm.registerEvents(new DamageEvent(), this);
+        pm.registerEvents(new PickupEvent(), this);
+        pm.registerEvents(new DropEvent(), this);
+        pm.registerEvents(new QuitEvent(), this);
     }
 
-    public void getAccountOptionsCallback(Player player, final Callback<AOptions> callback){
+    public AOptions getAccountOptions(Player player){
 
-        Bukkit.getScheduler().runTaskAsynchronously(RcbProxy.getInstance(), () -> {
+        final RedissonClient redissonClient = RedisAccess.INSTANCE.getRedissonClient();
+        final String key = "options:" + player.getUniqueId();
+        final RBucket<AOptions> accountRBucket = redissonClient.getBucket(key);
 
-            final RedissonClient redissonClient = RedisAccess.INSTANCE.getRedissonClient();
-            final String key = "options:" + player.getUniqueId().toString();
-            final RBucket<AOptions> accountRBucket = redissonClient.getBucket(key);
-
-            final AOptions account = accountRBucket.get();
-
-            Bukkit.getScheduler().runTask(RcbProxy.getInstance(), () -> {
-
-                callback.execute(account);
-            });
-        });
+        return accountRBucket.get();
     }
 
-    public void getAccountFriendsCallback(Player player, final Callback<AFriends> callback){
+    public AFriends getAccountFriends(Player player){
 
-        Bukkit.getScheduler().runTaskAsynchronously(RcbProxy.getInstance(), () -> {
+        final RedissonClient redissonClient = RedisAccess.INSTANCE.getRedissonClient();
+        final String key = "friends:" + player.getUniqueId();
+        final RBucket<AFriends> accountRBucket = redissonClient.getBucket(key);
 
-            final RedissonClient redissonClient = RedisAccess.INSTANCE.getRedissonClient();
-            final String key = "friends:" + player.getUniqueId().toString();
-            final RBucket<AFriends> accountRBucket = redissonClient.getBucket(key);
-
-            final AFriends account = accountRBucket.get();
-
-            Bukkit.getScheduler().runTask(RcbProxy.getInstance(), () -> {
-
-                callback.execute(account);
-            });
-        });
+        return accountRBucket.get();
     }
+
+    public APermissions getAccountPermissions(Player player){
+
+        final RedissonClient redissonClient = RedisAccess.INSTANCE.getRedissonClient();
+        final String key = "permissions:" + player.getUniqueId();
+        final RBucket<APermissions> accountRBucket = redissonClient.getBucket(key);
+
+        return accountRBucket.get();
+    }
+
+    public Account getAccount(Player player){
+
+        final RedissonClient redissonClient = RedisAccess.INSTANCE.getRedissonClient();
+        final String key = "account:" + player.getUniqueId();
+        final RBucket<Account> accountRBucket = redissonClient.getBucket(key);
+
+        return accountRBucket.get();
+    }
+
+    public Account getAccount(UUID uuid){
+
+        final RedissonClient redissonClient = RedisAccess.INSTANCE.getRedissonClient();
+        final String key = "account:" + uuid;
+        final RBucket<Account> accountRBucket = redissonClient.getBucket(key);
+
+        return accountRBucket.get();
+    }
+
+    public void sendAccountToRedis(Account account){
+        final RedissonClient redissonClient = RedisAccess.INSTANCE.getRedissonClient();
+        final String key = "account:" + account.getUuid();
+        final RBucket<Account> accountRBucket = redissonClient.getBucket(key);
+
+        accountRBucket.set(account);
+    }
+
 
     public static RcbProxy getInstance() {
         return instance;

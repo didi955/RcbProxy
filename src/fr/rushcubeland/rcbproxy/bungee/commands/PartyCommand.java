@@ -5,6 +5,7 @@ import fr.rushcubeland.commons.Account;
 import fr.rushcubeland.rcbproxy.bungee.RcbProxy;
 import fr.rushcubeland.rcbproxy.bungee.parties.Parties;
 import fr.rushcubeland.rcbproxy.bungee.parties.Party;
+import fr.rushcubeland.rcbproxy.bungee.rank.RankUnit;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 public class PartyCommand extends Command {
 
-    private static final List<String> cmds = Arrays.asList("group", "party", "p", "g");
+    private static final List<String> cmds = Arrays.asList("group", "party", "p", "g", "groupe");
 
     public PartyCommand(String name) {
         super(name);
@@ -28,6 +29,7 @@ public class PartyCommand extends Command {
         if(sender instanceof ProxiedPlayer){
             ProxiedPlayer player = (ProxiedPlayer) sender;
             Optional<AParty> aParty = RcbProxy.getInstance().getAccountParty(player);
+            RankUnit rank = RcbProxy.getInstance().getAccount(player).getRank();
 
             if(args.length == 0){
                 infos(player);
@@ -40,12 +42,13 @@ public class PartyCommand extends Command {
                             Party party = aParty.get().getParty();
                             player.sendMessage(new TextComponent("§e---------§d[Groupe]§e---------"));
                             for(ProxiedPlayer pls : party.getPlayers()){
+                                RankUnit rank2 = RcbProxy.getInstance().getAccount(pls).getRank();
                                 if(party.getCaptain() == pls){
-                                    player.sendMessage(new TextComponent("§b" + pls.getDisplayName() + " §7<> " + pls.getServer().getInfo().getName() + " §7[Capitaine]"));
+                                    player.sendMessage(new TextComponent("§b" + rank2.getPrefix() + pls.getDisplayName() + " §7<> " + pls.getServer().getInfo().getName() + " §7[Capitaine]"));
                                 }
                                 else
                                 {
-                                    player.sendMessage(new TextComponent("§b" + pls.getDisplayName() + " §7<> " + pls.getServer().getInfo().getName()));
+                                    player.sendMessage(new TextComponent("§b" + rank2.getPrefix() + pls.getDisplayName() + " §7<> " + pls.getServer().getInfo().getName()));
                                 }
                             }
                             player.sendMessage(new TextComponent("§e-------------------------"));
@@ -76,7 +79,7 @@ public class PartyCommand extends Command {
                         if(party.getCaptain() == player){
                             for(ProxiedPlayer pls : party.getPlayers()){
                                 Optional<AParty> a = RcbProxy.getInstance().getAccountParty(pls);
-                                pls.sendMessage(new TextComponent("§d[Groupe] §cVotre groupe a été dissout par §b" + player.getDisplayName() + " §7[Capitaine]"));
+                                pls.sendMessage(new TextComponent("§d[Groupe] §cVotre groupe a été dissout par " + rank.getPrefix() + player.getDisplayName() + " §7[Capitaine]"));
                                 a.get().setParty(null);
                                 party.disbandParty();
                             }
@@ -161,27 +164,25 @@ public class PartyCommand extends Command {
                                     if(party.getCaptain().equals(player)){
                                         party.setCaptain(target);
                                         for(ProxiedPlayer pls : party.getPlayers()){
-                                            pls.sendMessage(new TextComponent("§d[Groupe] §b" + player.getDisplayName() + " §aa transmis le lead à §e" + target.getDisplayName()));
+                                            RankUnit rank2 = RcbProxy.getInstance().getAccount(pls).getRank();
+                                            pls.sendMessage(new TextComponent("§d[Groupe] §b" + rank.getPrefix() + player.getDisplayName() + " §aa transmis le lead à §e" + rank2.getPrefix() + target.getDisplayName()));
                                         }
                                     }
                                     else
                                     {
-                                        player.sendMessage(new TextComponent("§d[Groupe] §cSeul le capitaine du groupe peut transmettre le lead à un membre !"));
-                                        return;
+                                        player.sendMessage(new TextComponent("§d[Groupe] §cSeul le capitaine du groupe peut transmettre le lead §cà un membre !"));
                                     }
                                 }
                                 else
                                 {
                                     player.sendMessage(new TextComponent("§d[Groupe] §cVous n'etes pas dans le meme groupe !"));
-                                    return;
                                 }
                             }
+                            else
+                            {
+                                player.sendMessage(new TextComponent("§d[Groupe] §cVous n'etes pas dans un groupe !"));
+                            }
                         }
-                    }
-                    else
-                    {
-                        player.sendMessage(new TextComponent("§d[Groupe] §cVous n'etes pas dans un groupe !"));
-                        return;
                     }
                 }
             }

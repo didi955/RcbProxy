@@ -5,7 +5,7 @@ import fr.rushcubeland.rcbproxy.bungee.data.redis.RedisAccess;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
 import fr.rushcubeland.commons.options.OptionUnit;
-import fr.rushcubeland.rcbproxy.bungee.exceptions.AccountNotFoundException;
+import fr.rushcubeland.rcbproxy.bungee.data.exceptions.AccountNotFoundException;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;

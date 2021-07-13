@@ -10,22 +10,12 @@ public class AParty {
     private Party party;
 
     private final UUID uuid;
-    private int maxPlayers;
 
-    public AParty(UUID uuid, int maxPlayers) {
+    public AParty(UUID uuid) {
         this.uuid = uuid;
-        this.maxPlayers = maxPlayers;
         if(!RcbProxy.getInstance().getAPartyList().contains(this)){
             RcbProxy.getInstance().getAPartyList().add(this);
         }
-    }
-
-    public int getMaxPlayers() {
-        return maxPlayers;
-    }
-
-    public void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = maxPlayers;
     }
 
     public boolean isInParty(){

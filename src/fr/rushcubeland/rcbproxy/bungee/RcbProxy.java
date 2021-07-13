@@ -3,7 +3,8 @@ package fr.rushcubeland.rcbproxy.bungee;
 import com.google.common.io.ByteStreams;
 import fr.rushcubeland.commons.*;
 import fr.rushcubeland.rcbproxy.bungee.data.redis.RedisAccess;
-import fr.rushcubeland.rcbproxy.bungee.exceptions.AccountNotFoundException;
+import fr.rushcubeland.rcbproxy.bungee.data.exceptions.AccountNotFoundException;
+import fr.rushcubeland.rcbproxy.bungee.listeners.ServerConnect;
 import fr.rushcubeland.rcbproxy.bungee.provider.AccountProvider;
 import fr.rushcubeland.rcbproxy.bungee.provider.FriendsProvider;
 import fr.rushcubeland.rcbproxy.bungee.provider.OptionsProvider;
@@ -20,19 +21,22 @@ import fr.rushcubeland.rcbproxy.bungee.data.sql.DatabaseManager;
 import fr.rushcubeland.rcbproxy.bungee.data.sql.MySQL;
 import fr.rushcubeland.rcbproxy.bungee.listeners.ProxiedPlayerJoin;
 import fr.rushcubeland.rcbproxy.bungee.listeners.ProxiedPlayerQuit;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.redisson.api.MapOptions;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.*;
 
 public class RcbProxy extends Plugin {
 
@@ -43,7 +47,7 @@ public class RcbProxy extends Plugin {
 
     private final HashMap<ProxiedPlayer, ProxiedPlayer> mpData = new HashMap<>();
 
-    public static String channel = "rcbproxy:main";
+    public final static String channel = "rcbproxy:main";
 
     private BanManager banManager;
     private MuteManager muteManager;
@@ -62,6 +66,7 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxiedPlayerJoin());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxiedPlayerQuit());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new ProxyPing());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new ServerConnect());
 
         initCommands();
         TimeUnit.initTimeUnit();
@@ -123,6 +128,10 @@ public class RcbProxy extends Plugin {
             ProxyServer.getInstance().getPluginManager()
                     .registerCommand(this, new OptionsCommand(cmd));
         }
+        for(String cmd : ReportCommand.getCmds()){
+            ProxyServer.getInstance().getPluginManager()
+                    .registerCommand(this, new ReportCommand(cmd));
+        }
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new BanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new UnbanCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new WhoisCommand());
@@ -132,7 +141,6 @@ public class RcbProxy extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new KickCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new ModModeratorCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new StaffChatCommand());
-        ProxyServer.getInstance().getPluginManager().registerCommand(this, new ReportCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new MPCommand());
     }
 
@@ -146,7 +154,7 @@ public class RcbProxy extends Plugin {
             if (!configFile.exists()) {
                 try (InputStream is = getResourceAsStream("config.yml");
                      OutputStream os = new FileOutputStream(configFile)) {
-                    ByteStreams.copy(is, os);
+                     ByteStreams.copy(is, os);
                 }
             }
 
@@ -170,79 +178,101 @@ public class RcbProxy extends Plugin {
 
     public Account getAccount(ProxiedPlayer player) {
 
-        final Account[] account = {AccountProvider.DEFAULT_ACCOUNT};
+        Account account = null;
 
-        BungeeCord.getInstance().getScheduler().runAsync(this, () -> {
             try {
 
                 final AccountProvider accountProvider = new AccountProvider(player);
-                account[0] = accountProvider.getAccount();
+                account = accountProvider.getAccount();
 
 
             } catch (AccountNotFoundException exception) {
                 System.err.println(exception.getMessage());
+                player.disconnect(new TextComponent("Vous Compte n'a pas pu être trouvé"));
             }
-        });
 
-        return account[0];
+            return account;
+    }
+
+    public Account getAccount(UUID uuid) {
+
+        Account account = null;
+
+        try {
+
+            final AccountProvider accountProvider = new AccountProvider(uuid);
+            account = accountProvider.getAccount();
+
+
+        } catch (AccountNotFoundException exception) {
+            System.err.println(exception.getMessage());
+        }
+
+        return account;
     }
 
     public AOptions getAccountOptions(ProxiedPlayer player) {
 
-        final AOptions[] account = {OptionsProvider.DEFAULT_ACCOUNT};
+        AOptions account = null;
 
-        BungeeCord.getInstance().getScheduler().runAsync(this, () -> {
-            try {
+        try {
 
-                final OptionsProvider accountProvider = new OptionsProvider(player);
-                account[0] = accountProvider.getAccount();
+            final OptionsProvider optionsProvider = new OptionsProvider(player);
+            account = optionsProvider.getAccount();
 
 
-            } catch (AccountNotFoundException exception) {
-                System.err.println(exception.getMessage());
-            }
-        });
+        } catch (AccountNotFoundException exception) {
+            System.err.println(exception.getMessage());
+            player.disconnect(new TextComponent("Vous Compte n'a pas pu être trouvé"));
+        }
 
-        return account[0];
+        return account;
     }
 
     public AFriends getAccountFriends(ProxiedPlayer player) {
 
-        final AFriends[] account = {FriendsProvider.DEFAULT_ACCOUNT};
+        AFriends account = null;
 
-        BungeeCord.getInstance().getScheduler().runAsync(this, () -> {
-            try {
+        try {
 
-                final FriendsProvider accountProvider = new FriendsProvider(player);
-                account[0] = accountProvider.getAccount();
+            final FriendsProvider friendsProvider = new FriendsProvider(player);
+            account = friendsProvider.getAccount();
 
 
-            } catch (AccountNotFoundException exception) {
-                System.err.println(exception.getMessage());
-            }
-        });
+        } catch (AccountNotFoundException exception) {
+            System.err.println(exception.getMessage());
+            player.disconnect(new TextComponent("Vous Compte n'a pas pu être trouvé"));
+        }
 
-        return account[0];
+        return account;
     }
 
     public APermissions getAccountPermissions(ProxiedPlayer player) {
 
-        final APermissions[] account = {PermissionsProvider.DEFAULT_ACCOUNT};
+        APermissions account = null;
 
-        BungeeCord.getInstance().getScheduler().runAsync(this, () -> {
-            try {
+        try {
 
-                final PermissionsProvider accountProvider = new PermissionsProvider(player);
-                account[0] = accountProvider.getAccount();
+            final PermissionsProvider permissionsProvider = new PermissionsProvider(player);
+            account = permissionsProvider.getAccount();
 
 
-            } catch (AccountNotFoundException exception) {
-                System.err.println(exception.getMessage());
-            }
-        });
+        } catch (AccountNotFoundException exception) {
+            System.err.println(exception.getMessage());
+            player.disconnect(new TextComponent("Vous Compte n'a pas pu être trouvé"));
+        }
 
-        return account[0];
+        return account;
     }
+
+    public void sendAccountToRedis(Account account){
+        final RedissonClient redissonClient = RedisAccess.INSTANCE.getRedissonClient();
+        final String key = "account:" + account.getUuid().toString();
+        final RBucket<Account> accountRBucket = redissonClient.getBucket(key);
+
+        accountRBucket.set(account);
+    }
+
 
 
     public List<Party> getParties() {
