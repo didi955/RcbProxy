@@ -3,8 +3,8 @@ package fr.rushcubeland.rcbproxy.bukkit.data.sql;
 import fr.rushcubeland.rcbproxy.bukkit.RcbProxy;
 
 public enum DatabaseManager {
-
-    Main_BDD(new DatabaseCredentials(RcbProxy.getInstance().getConfig().getString("Databases.database1.host"), RcbProxy.getInstance().getConfig().getString("Databases.database1.user"), RcbProxy.getInstance().getConfig().getString("Databases.database1.pass"), RcbProxy.getInstance().getConfig().getString("Databases.database1.dbname"), RcbProxy.getInstance().getConfig().getInt("Databases.database1.port")));
+    
+    Main_BDD(new DatabaseCredentials("192.168.1.2", "****", "*****", "rcb_core", 3306));
 
     private DatabaseAccess databaseAccess;
 
